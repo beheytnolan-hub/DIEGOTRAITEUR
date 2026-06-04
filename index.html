@@ -113,7 +113,7 @@
 
     /* MODALES ET ADMIN */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .admin-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; }
+    .admin-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; }
     .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
     .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .form-group input, .form-group select, .form-group textarea { background: var(--bg); border: 1px solid var(--border); color: white; padding: 14px 20px; border-radius: 16px; font-family: inherit; font-size: 0.95rem; outline: none; width: 100%; }
@@ -142,6 +142,7 @@
       nav { height: auto; padding: 15px 5%; flex-direction: column; gap: 12px; }
       .controls-row { padding-top: 170px; }
       .sidebar { width: 100%; max-width: 100%; }
+      .admin-box { padding: 30px 15px; }
     }
   </style>
 </head>
@@ -253,7 +254,7 @@
   </div>
 
   <div class="modal-overlay" id="checkout-modal">
-    <div class="admin-box">
+    <div class="admin-box" style="max-width: 600px;">
       <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
         <h3>📋 Adresse de Livraison</h3>
         <button class="sidebar-close" onclick="closeModal('checkout-modal')">✕</button>
@@ -309,7 +310,7 @@
   </div>
 
   <div class="modal-overlay" id="admin-dashboard-modal">
-    <div class="admin-box" style="max-width: 800px;">
+    <div class="admin-box">
       <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
         <h3>🛠️ Console Pro DiegoTraiteur</h3>
         <button class="sidebar-close" onclick="closeModal('admin-dashboard-modal')">✕</button>
@@ -386,7 +387,6 @@
       } catch (error) {}
     }
 
-    // OUVERTURE SIMPLIFIÉE EN CLIQUANT SUR LE LOGO
     function openSecretAdmin() { 
       document.getElementById('admin-user').value = "";
       document.getElementById('admin-pass').value = "";
@@ -395,12 +395,12 @@
     
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // IDENTIFIANTS COMPATIBLES FORCÉS SANS BUG DE CACHE
+    // IDENTIFIANTS REMIS À : admin / shop2026
     function verifyAdminLogin() {
       const u = document.getElementById('admin-user').value.trim();
       const p = document.getElementById('admin-pass').value.trim();
       
-      if (u === "diego" && p === "traiteur2026") {
+      if (u === "admin" && p === "shop2026") {
         closeModal('login-modal');
         document.getElementById('admin-dashboard-modal').style.display = 'flex';
         
@@ -412,7 +412,7 @@
         renderStockControl();
         renderOrdersList();
       } else { 
-        alert("Accès refusé. Veuillez utiliser l'identifiant 'diego' et son mot de passe associé."); 
+        alert("Identifiants incorrects."); 
       }
     }
 
@@ -520,7 +520,7 @@
         document.getElementById('product-form').reset(); 
         closeModal('admin-dashboard-modal'); 
         await fetchDataFromCloud();
-      } catch (err) {}
+      } catch (error) {}
     }
 
     async function deleteProductCloud(id) {
@@ -528,7 +528,7 @@
       try {
         const res = await fetch(`${API_PRODUCTS_URL}/${id}`, { method: 'DELETE' });
         if(res.ok) { await fetchDataFromCloud(); renderStockControl(); }
-      } catch (err) {}
+      } catch (error) {}
     }
 
     function renderStockControl() {
