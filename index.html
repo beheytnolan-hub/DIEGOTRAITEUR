@@ -10,11 +10,11 @@
 
   <style>
     :root {
-      --accent: #d92b2b; /* Rouge signature */
+      --accent: #d92b2b;
       --accent-hover: #b31e1e;
       --accent-light: #fff0f0;
-      --gold: #dfa846; /* Touche dorée festive */
-      --bg: #0d0908; /* Fond sombre premium */
+      --gold: #dfa846;
+      --bg: #0d0908;
       --bg-card: #17100e;
       --bg-card-hover: #211714;
       --bg-nav: rgba(13, 9, 8, 0.8);
@@ -105,4 +105,552 @@
     .sidebar.open { right: 0; }
     .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
     .sidebar-close { background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; padding: 5px; }
-    .cart-items { flex-grow: 1;
+    .cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+    .cart-item { display: flex; gap: 15px; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--border); }
+    .cart-item-info { flex-grow: 1; }
+    .cart-item-del { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+    .cart-footer { padding-top: 25px; border-top: 1px solid var(--border); }
+
+    /* MODALES ET ADMIN */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .admin-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; }
+    .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group select, .form-group textarea { background: var(--bg); border: 1px solid var(--border); color: white; padding: 14px 20px; border-radius: 16px; font-family: inherit; font-size: 0.95rem; outline: none; width: 100%; }
+    .form-group textarea { min-height: 80px; resize: none; }
+    
+    .price-summary-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin: 20px 0; font-size: 0.95rem; }
+    .price-summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    
+    .admin-nav-tabs { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 10px; overflow-x: auto; }
+    .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; padding: 8px 16px; font-weight: 700; position: relative; white-space: nowrap; }
+    .tab-btn.active { color: var(--accent); }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: -12px; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 10px; }
+    
+    .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 12px; }
+    .order-row { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); }
+    .order-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+    .success-icon { width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px; }
+
+    @media (max-width: 768px) {
+      .contact-container { grid-template-columns: 1fr; gap: 30px; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .prod-content { padding: 14px; }
+      .prod-title { font-size: 1rem; }
+      .prod-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .prod-price { font-size: 1.15rem; }
+      nav { height: auto; padding: 15px 5%; flex-direction: column; gap: 12px; }
+      .controls-row { padding-top: 170px; }
+      .sidebar { width: 100%; max-width: 100%; }
+      .admin-box { padding: 30px 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo-container" onclick="openSecretAdmin()">
+      <img src="image_ebb786.jpg" class="logo-img" alt="Logo" onerror="this.src='https://placehold.co/100x100?text=Diego'">
+      <span class="logo-text">DIEGOTRAITEUR<span>.</span></span>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link-btn active" id="btn-nav-accueil" onclick="switchSection('accueil')">La Vitrine</button>
+      <button class="nav-link-btn" id="btn-nav-contact" onclick="switchSection('contact')">Nous Contacter</button>
+      <button class="nav-btn" onclick="toggleCart(true)">
+        🛒 Panier <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="section-accueil" class="page-section active">
+    <div class="controls-row">
+      <div class="search-wrapper">
+        <input type="text" id="search-input" class="search-input" placeholder="Rechercher une création gourmande..." oninput="filterAndSortProducts()">
+      </div>
+      <select id="sort-select" class="sort-select" onchange="filterAndSortProducts()">
+        <option value="default">Tri par défaut</option>
+        <option value="price-asc">Prix : Économique</option>
+        <option value="price-desc">Prix : Premium</option>
+      </select>
+    </div>
+
+    <header class="hero">
+      <div class="hero-banner">
+        <h1>L'Art Culinaire & Haute Tradition.</h1>
+        <p>Plats d'exception, pièces d'orfèvrerie autour du saumon et de la gastronomie fine. Commandes sécurisées avec paiement PayPal intégré.</p>
+        <button class="btn btn-primary" onclick="document.getElementById('shop-section').scrollIntoView()">Découvrir la carte traiteur</button>
+      </div>
+    </header>
+
+    <main class="shop-container" id="shop-section">
+      <div class="grid-title"><h2>Nos Créations Disponibles</h2></div>
+      <div class="products-grid" id="products-container"></div>
+    </main>
+  </div>
+
+  <div id="section-contact" class="page-section">
+    <div style="padding-top: 120px; text-align: center;">
+      <h1 style="color: var(--gold); font-size: 2.5rem;">Prendre Contact avec l'Atelier</h1>
+      <p style="color: var(--text-muted); margin-top: 10px;">Une demande spéciale, un mariage ou un buffet sur-mesure ? Écrivez-nous.</p>
+    </div>
+
+    <div class="contact-container">
+      <div class="contact-card">
+        <h2>Nos Coordonnées</h2>
+        <div class="contact-info-line">
+          <span class="icon">📞</span>
+          <div>
+            <strong>Téléphone Atelier :</strong><br>
+            <a href="tel:" id="info-phone">06 00 00 00 00</a>
+          </div>
+        </div>
+        <div class="contact-info-line">
+          <span class="icon">✉️</span>
+          <div>
+            <strong>Adresse E-mail :</strong><br>
+            <a href="mailto:" id="info-email">contact@diegotraiteur.com</a>
+          </div>
+        </div>
+        <div class="contact-info-line">
+          <span class="icon">📍</span>
+          <div>
+            <strong>Notre Adresse :</strong><br>
+            <span id="info-address" style="color: white; font-weight: 600;">12 rue de la Gastronomie, 75000 Paris</span>
+          </div>
+        </div>
+        <div class="contact-info-line">
+          <span class="icon">⏰</span>
+          <div>
+            <strong>Horaires :</strong><br>
+            <span id="info-hours" style="color: var(--text-muted);">7j/7 — De 08:00 à 20:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <h2>Envoyer un message</h2>
+        <form onsubmit="submitDirectMessage(event)">
+          <div class="form-group"><label>Nom Complet</label><input type="text" id="m-name" required placeholder="Ex: M. Dupont"></div>
+          <div class="form-group"><label>Votre Mobile</label><input type="tel" id="m-phone" required placeholder="Ex: 06..."></div>
+          <div class="form-group"><label>Votre Message / Projet</label><textarea id="m-body" required placeholder="Détaillez votre besoin..."></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">🚀 Envoyer la demande</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar" id="cart-sidebar">
+    <div class="sidebar-header">
+      <h3>Votre Sélection</h3>
+      <button class="sidebar-close" onclick="toggleCart(false)">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items-container"></div>
+    <div class="cart-footer">
+      <div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:700; margin-bottom:20px;">
+        <span>Sous-total</span> <span id="cart-total-price" style="color:var(--gold);">0.00 €</span>
+      </div>
+      <button class="btn btn-primary" style="width: 100%;" onclick="openCheckoutModal()">📦 Passer la commande</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="admin-box" style="max-width: 600px;">
+      <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
+        <h3>📋 Adresse de Livraison</h3>
+        <button class="sidebar-close" onclick="closeModal('checkout-modal')">✕</button>
+      </div>
+      <div class="form-group"><label>Nom Complet</label><input type="text" id="c-name"></div>
+      <div class="form-group"><label>Téléphone Mobile</label><input type="tel" id="c-phone"></div>
+      <div class="form-group"><label>Adresse Complète</label><textarea id="c-address"></textarea></div>
+      <div class="price-summary-box">
+        <div class="price-summary-line"><span>Total Créations :</span> <span id="summary-subtotal">0.00 €</span></div>
+        <div class="price-summary-line"><span>Livraison fixe :</span> <span>4.00 €</span></div>
+        <div class="price-summary-line" style="font-weight:700; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:white;">
+          <span>Total à régler :</span> <span id="summary-total">0.00 €</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" style="width: 100%;" onclick="proceedToPaymentStage()">🔒 Valider et payer</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="payment-modal">
+    <div class="admin-box" style="max-width: 460px;">
+      <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
+        <h3>💳 Paiement Traiteur</h3>
+        <button class="sidebar-close" onclick="closeModal('payment-modal')">✕</button>
+      </div>
+      <div style="text-align: center; margin-bottom: 25px;">
+        <span style="color: var(--text-muted);">Montant total :</span>
+        <h2 id="payment-grand-total" style="font-size: 2.2rem; color: var(--gold); margin-top: 5px; font-family: 'Space Grotesk';">0.00 €</h2>
+      </div>
+      <div id="paypal-button-container"></div>
+      <button class="btn btn-secondary" style="width: 100%; margin-top: 15px; border:none;" onclick="backToAddressStage()">⬅️ Retour</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="success-modal">
+    <div class="admin-box" style="max-width: 450px;">
+      <div style="text-align: center;">
+        <div class="success-icon">✓</div>
+        <h2>Commande Enregistrée !</h2>
+        <p style="color: #a1a1aa; line-height: 1.6; margin: 15px 0 25px;">Votre paiement a été validé. L'atelier commence immédiatement la préparation.</p>
+        <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('success-modal')">Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="login-modal">
+    <div class="admin-box" style="max-width: 400px; text-align: center;">
+      <h2>🔐 Espace Pro DiegoTraiteur</h2>
+      <div class="form-group" style="margin-top:15px;"><input type="text" id="admin-user" placeholder="Identifiant"></div>
+      <div class="form-group"><input type="password" id="admin-pass" placeholder="Mot de passe"></div>
+      <button class="btn btn-primary" style="width: 100%;" onclick="verifyAdminLogin()">Ouvrir l'administration</button>
+      <button class="btn btn-secondary" style="width: 100%; margin-top: 10px; border:none;" onclick="closeModal('login-modal')">Annuler</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="admin-dashboard-modal">
+    <div class="admin-box">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <h3>🛠️ Console Pro DiegoTraiteur</h3>
+        <button class="sidebar-close" onclick="closeModal('admin-dashboard-modal')">✕</button>
+      </div>
+      <div class="admin-nav-tabs">
+        <button class="tab-btn active" id="tab-prod-btn" onclick="switchTab('products')">🍳 Ajouter Plat</button>
+        <button class="tab-btn" id="tab-stock-btn" onclick="switchTab('stock')">🗂️ Stocks Vitrine</button>
+        <button class="tab-btn" id="tab-orders-btn" onclick="switchTab('orders')">📬 Commandes & Messages</button>
+        <button class="tab-btn" id="tab-config-btn" onclick="switchTab('config')">📞 Éditer Infos Contact</button>
+      </div>
+
+      <div id="admin-products-section">
+        <form id="product-form" onsubmit="addProductCloud(event)">
+          <div class="form-group"><label>Nom du plat</label><input type="text" id="p-title" required></div>
+          <div class="form-group"><label>Prix unitaire (€)</label><input type="number" id="p-price" step="0.01" required></div>
+          <div class="form-group"><label>Lien de la photo internet</label><input type="text" id="p-img" placeholder="https://..."></div>
+          <div class="form-group"><label>Description des saveurs</label><textarea id="p-desc" required></textarea></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">🚀 Mettre en ligne</button>
+        </form>
+      </div>
+
+      <div id="admin-stock-section" style="display:none;"><div id="stock-list-container"></div></div>
+      <div id="admin-orders-section" style="display: none;"><div id="orders-log-container"></div></div>
+
+      <div id="admin-config-section" style="display: none;">
+        <div class="form-group"><label>Téléphone affiché</label><input type="text" id="edit-phone"></div>
+        <div class="form-group"><label>Email affiché</label><input type="email" id="edit-email"></div>
+        <div class="form-group"><label>Adresse de l'Atelier</label><input type="text" id="edit-address"></div>
+        <div class="form-group"><label>Horaires d'ouverture</label><input type="text" id="edit-hours"></div>
+        <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="saveContactConfig()">💾 Publier les Coordonnées</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_PRODUCTS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/products";
+    const API_ORDERS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/orders"; 
+
+    let products = [];
+    let cloudOrders = [];
+    let cart = [];
+    let clientDeliveryInfo = null;
+    let paypalRendered = false;
+
+    let contactConfig = JSON.parse(localStorage.getItem('traiteur_contact_data')) || {
+      phone: "06 45 89 12 00",
+      email: "contact@diegotraiteur.com",
+      address: "Atelier DiegoTraiteur, 45 Avenue des Saveurs, 75008 Paris",
+      hours: "7j/7 — De 07:30 à 21:00"
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchDataFromCloud();
+      applyContactConfigUI();
+    });
+
+    function switchSection(sectionId) {
+      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-link-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`section-${sectionId}`).classList.add('active');
+      document.getElementById(`btn-nav-${sectionId}`).classList.add('active');
+      window.scrollTo(0,0);
+    }
+
+    async function fetchDataFromCloud() {
+      try {
+        const [prodRes, orderRes] = await Promise.all([
+          fetch(API_PRODUCTS_URL),
+          fetch(API_ORDERS_URL).catch(() => null)
+        ]);
+        if(prodRes && prodRes.ok) { products = await prodRes.json(); products.reverse(); }
+        if(orderRes && orderRes.ok) { cloudOrders = await orderRes.json(); cloudOrders.reverse(); }
+        filterAndSortProducts();
+      } catch (error) {}
+    }
+
+    function openSecretAdmin() { 
+      document.getElementById('admin-user').value = "";
+      document.getElementById('admin-pass').value = "";
+      document.getElementById('login-modal').style.display = 'flex'; 
+    }
+    
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // ICI : CORRECTION DEFINITIVE DES IDENTIFIANTS
+    function verifyAdminLogin() {
+      const u = document.getElementById('admin-user').value.trim();
+      const p = document.getElementById('admin-pass').value.trim();
+      
+      if (u === "diego" && p === "traiteur2026") {
+        closeModal('login-modal');
+        document.getElementById('admin-dashboard-modal').style.display = 'flex';
+        
+        document.getElementById('edit-phone').value = contactConfig.phone;
+        document.getElementById('edit-email').value = contactConfig.email;
+        document.getElementById('edit-address').value = contactConfig.address;
+        document.getElementById('edit-hours').value = contactConfig.hours;
+
+        renderStockControl();
+        renderOrdersList();
+      } else { 
+        alert("Identifiants incorrects."); 
+      }
+    }
+
+    function switchTab(tab) {
+      document.getElementById('admin-products-section').style.display = tab === 'products' ? 'block' : 'none';
+      document.getElementById('admin-stock-section').style.display = tab === 'stock' ? 'block' : 'none';
+      document.getElementById('admin-orders-section').style.display = tab === 'orders' ? 'block' : 'none';
+      document.getElementById('admin-config-section').style.display = tab === 'config' ? 'block' : 'none';
+      
+      document.getElementById('tab-prod-btn').classList.toggle('active', tab === 'products');
+      document.getElementById('tab-stock-btn').classList.toggle('active', tab === 'stock');
+      document.getElementById('tab-orders-btn').classList.toggle('active', tab === 'orders');
+      document.getElementById('tab-config-btn').classList.toggle('active', tab === 'config');
+      
+      if(tab === 'stock') renderStockControl();
+      if(tab === 'orders') renderOrdersList();
+    }
+
+    function saveContactConfig() {
+      contactConfig.phone = document.getElementById('edit-phone').value.trim();
+      contactConfig.email = document.getElementById('edit-email').value.trim();
+      contactConfig.address = document.getElementById('edit-address').value.trim();
+      contactConfig.hours = document.getElementById('edit-hours').value.trim();
+      
+      localStorage.setItem('traiteur_contact_data', JSON.stringify(contactConfig));
+      applyContactConfigUI();
+      alert("Coordonnées mises à jour sur le site !");
+      closeModal('admin-dashboard-modal');
+    }
+
+    function applyContactConfigUI() {
+      document.getElementById('info-phone').innerText = contactConfig.phone;
+      document.getElementById('info-phone').href = "tel:" + contactConfig.phone.replace(/\s+/g, '');
+      document.getElementById('info-email').innerText = contactConfig.email;
+      document.getElementById('info-email').href = "mailto:" + contactConfig.email;
+      document.getElementById('info-address').innerText = contactConfig.address;
+      document.getElementById('info-hours').innerText = contactConfig.hours;
+    }
+
+    async function submitDirectMessage(e) {
+      e.preventDefault();
+      const name = document.getElementById('m-name').value.trim();
+      const phone = document.getElementById('m-phone').value.trim();
+      const body = document.getElementById('m-body').value.trim();
+
+      const payload = {
+        client: name,
+        tel: phone,
+        adresse: "MESSAGE DIRECT DEPUIS ONGLET CONTACT",
+        total: "Demande de contact / Devis",
+        items: body,
+        date: new Date().toLocaleString('fr-FR')
+      };
+
+      try {
+        await fetch(API_ORDERS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        alert("Votre message a bien été transmis. Nous vous recontactons rapidement !");
+        document.getElementById('m-name').value = ""; document.getElementById('m-phone').value = ""; document.getElementById('m-body').value = "";
+        fetchDataFromCloud();
+      } catch(e) {}
+    }
+
+    function filterAndSortProducts() {
+      const searchStr = document.getElementById('search-input').value.toLowerCase().trim();
+      const sortType = document.getElementById('sort-select').value;
+      let result = [...products];
+      if(searchStr) result = result.filter(p => p.title.toLowerCase().includes(searchStr) || p.desc.toLowerCase().includes(searchStr));
+      if(sortType === "price-asc") result.sort((a,b) => parseFloat(a.price) - parseFloat(b.price));
+      if(sortType === "price-desc") result.sort((a,b) => parseFloat(b.price) - parseFloat(a.price));
+      renderProductsGrid(result);
+    }
+
+    function renderProductsGrid(arr) {
+      const container = document.getElementById('products-container');
+      if(arr.length === 0) { container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">Aucune pièce culinaire disponible.</div>`; return; }
+      container.innerHTML = arr.map(p => `
+        <div class="product-card">
+          <div class="prod-img-wrapper">
+            <img src="${p.img || 'image_ebb786.jpg'}" class="prod-img" onerror="this.src='image_ebb786.jpg'"/>
+          </div>
+          <div class="prod-content">
+            <h3 class="prod-title">${escapeHtml(p.title)}</h3>
+            <p class="prod-desc">${escapeHtml(p.desc)}</p>
+            <div class="prod-footer">
+              <span class="prod-price">${parseFloat(p.price).toFixed(2)} €</span>
+              <button class="btn btn-primary" style="padding:10px 18px; font-size:0.85rem;" onclick="addToCart('${p.id}')">Ajouter à ma table</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function addProductCloud(e) {
+      e.preventDefault();
+      const title = document.getElementById('p-title').value.trim();
+      const price = parseFloat(document.getElementById('p-price').value);
+      const img = document.getElementById('p-img').value.trim();
+      const desc = document.getElementById('p-desc').value.trim();
+      try {
+        await fetch(API_PRODUCTS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, price, cat: "Traiteur", img, desc })
+        });
+        document.getElementById('product-form').reset(); 
+        closeModal('admin-dashboard-modal'); 
+        await fetchDataFromCloud();
+      } catch (error) {}
+    }
+
+    async function deleteProductCloud(id) {
+      if(!confirm("Retirer ce plat de la carte ?")) return;
+      try {
+        const res = await fetch(`${API_PRODUCTS_URL}/${id}`, { method: 'DELETE' });
+        if(res.ok) { await fetchDataFromCloud(); renderStockControl(); }
+      } catch (error) {}
+    }
+
+    function renderStockControl() {
+      const container = document.getElementById('stock-list-container');
+      container.innerHTML = products.map(p => `
+        <div class="admin-list-item">
+          <div><strong style="color:white;">${escapeHtml(p.title)}</strong> — <span style="color:var(--gold); font-weight:700;">${parseFloat(p.price).toFixed(2)} €</span></div>
+          <button class="btn btn-danger" style="padding:8px 15px; font-size:0.85rem;" onclick="deleteProductCloud('${p.id}')">Retirer</button>
+        </div>
+      `).join('');
+    }
+
+    function toggleCart(open) { document.getElementById('cart-sidebar').classList.toggle('open', open); }
+    function addToCart(id) { const p = products.find(prod => prod.id == id); if(p) { cart.push(p); updateCartUI(); toggleCart(true); } }
+    function removeFromCart(index) { cart.splice(index, 1); paypalRendered = false; updateCartUI(); }
+
+    function updateCartUI() {
+      document.getElementById('cart-count').innerText = cart.length;
+      const container = document.getElementById('cart-items-container');
+      if(cart.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding-top:40px;">Votre panier est vide.</p>`;
+        document.getElementById('cart-total-price').innerText = "0.00 €";
+        return;
+      }
+      container.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <div style="font-weight:700; color:white;">${escapeHtml(item.title)}</div>
+            <div style="color:var(--gold); font-weight:700; margin-top:2px;">${parseFloat(item.price).toFixed(2)} €</div>
+          </div>
+          <button class="cart-item-del" onclick="removeFromCart(${index})">Retirer</button>
+        </div>
+      `).join('');
+      const subtotal = cart.reduce((s, i) => s + i.price, 0);
+      document.getElementById('cart-total-price').innerText = `${subtotal.toFixed(2)} €`;
+    }
+
+    function openCheckoutModal() {
+      if(cart.length === 0) return;
+      toggleCart(false);
+      const subtotal = cart.reduce((s, i) => s + i.price, 0);
+      const totalWithDelivery = subtotal + 4.00;
+      document.getElementById('summary-subtotal').innerText = `${subtotal.toFixed(2)} €`;
+      document.getElementById('summary-total').innerText = `${totalWithDelivery.toFixed(2)} €`;
+      document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function proceedToPaymentStage() {
+      const name = document.getElementById('c-name').value.trim();
+      const phone = document.getElementById('c-phone').value.trim();
+      const address = document.getElementById('c-address').value.trim();
+      if(!name || !phone || !address) { alert("⚠️ Données incomplètes."); return; }
+
+      clientDeliveryInfo = { name, phone, address };
+      const subtotal = cart.reduce((s, i) => s + i.price, 0);
+      const finalGrandTotal = subtotal + 4.00;
+
+      closeModal('checkout-modal');
+      document.getElementById('payment-grand-total').innerText = `${finalGrandTotal.toFixed(2)} €`;
+      document.getElementById('payment-modal').style.display = 'flex';
+      initPayPalButton(finalGrandTotal);
+    }
+
+    function backToAddressStage() {
+      closeModal('payment-modal');
+      document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function initPayPalButton(grandTotalValue) {
+      if (paypalRendered) return;
+      document.getElementById('paypal-button-container').innerHTML = "";
+      paypal.Buttons({
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              amount: { currency_code: 'EUR', value: grandTotalValue.toFixed(2) },
+              description: "Commande Gastronomique"
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(async function(details) {
+            const orderPayload = {
+              client: clientDeliveryInfo.name,
+              tel: clientDeliveryInfo.phone,
+              adresse: clientDeliveryInfo.address,
+              total: `${grandTotalValue.toFixed(2)} €`,
+              items: cart.map(i => i.title).join(', '),
+              date: new Date().toLocaleString('fr-FR'),
+              paypalOrderId: details.id
+            };
+            try {
+              await fetch(API_ORDERS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
+            } catch(e) {}
+            closeModal('payment-modal');
+            cart = []; paypalRendered = false; updateCartUI();
+            document.getElementById('success-modal').style.display = 'flex';
+            fetchDataFromCloud();
+          });
+        },
+        onError: function(err) { alert("⚠️ Échec PayPal."); }
+      }).render('#paypal-button-container');
+      paypalRendered = true;
+    }
+
+    function renderOrdersList() {
+      const container = document.getElementById('orders-log-container');
+      if(cloudOrders.length === 0) { container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">Aucun historique.</p>`; return; }
+      container.innerHTML = cloudOrders.map(o => `
+        <div class="order-row">
+          <div class="order-header"><span>📬 Fiche</span><span style="color:var(--gold);">${o.total}</span></div>
+          <div style="font-size:0.9rem; color:#a69995; line-height:1.5;">
+            <p><strong>Client :</strong> ${escapeHtml(o.client)}</p>
+            <p><strong>Mobile :</strong> <a href="tel:${o.tel}" style="color: var(--accent); text-decoration:none;">${escapeHtml(o.tel)}</a></p>
+            <p><strong>Note :</strong> ${escapeHtml(o.adresse)}</p>
+            <p style="margin-top:5px; border-top:1px dashed rgba(255,255,255,0.05); padding-top:5px;"><strong>Détail :</strong> <span style="color:white;">${escapeHtml(o.items)}</span></p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  </script>
+</body>
+</html>
