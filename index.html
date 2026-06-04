@@ -15,7 +15,7 @@
       --bg: linear-gradient(135deg, #fdf6ec 0%, #f7e6d4 100%); /* Fond riche en couleurs chaudes */
       --bg-card: #ffffff;
       --bg-card-hover: #fffaf4;
-      --bg-nav: rgba(253, 246, 236, 0.9);
+      --bg-nav: rgba(253, 246, 236, 0.95);
       --border: #ebd1b7;
       --border-hover: #dfa846;
       --text: #1c1917; 
@@ -27,16 +27,17 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
     h1, h2, h3, h4, .logo-text { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.5px; }
 
-    /* NAVBAR AVEC LOGO BIEN ROND ET PROPRE */
+    /* NAVBAR S'ADAPTE PARFAITEMENT AUX SMARTPHONES */
     nav { 
       position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
       height: 95px; display: flex; align-items: center; justify-content: space-between; 
       padding: 0 5%; background: var(--bg-nav); border-bottom: 2px solid var(--border); 
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
     }
     .logo-container { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
     
-    /* Correction du logo carré : object-fit cover + background noir + clip-path garantissent un rond parfait sans bandes blanches */
+    /* Logo perfectly round */
     .logo-img { 
       height: 72px; width: 72px; 
       object-fit: cover; 
@@ -55,18 +56,18 @@
     .nav-link-btn.active { color: white; background: var(--accent); border-color: var(--accent); }
 
     /* SECTIONS ANIMÉES */
-    .page-section { display: none; padding-top: 130px; animation: fadeIn 0.4s ease forwards; }
+    .page-section { display: none; padding-top: 130px; animation: fadeIn 0.4s ease forwards; padding-bottom: 60px; }
     .page-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* MEILLEUR LOOK POUR LA VITRINE / HERO */
+    /* LOOK HERO / VITRINE */
     .hero { padding: 10px 5% 30px; max-width: 1400px; margin: 0 auto; }
     .hero-banner { background: linear-gradient(135deg, #2c1c18 0%, #170d0b 100%); border: 3px solid var(--gold); border-radius: 40px; padding: 90px 40px; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(44,28,24,0.15); }
-    .hero h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 25px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .hero h1 { font-size: clamp(2.2rem, 5.5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 25px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
     .hero p { color: #f5efe6; font-size: 1.2rem; max-width: 750px; margin: 0 auto 40px; line-height: 1.7; opacity: 0.9; }
 
-    /* STORY AVEC DES COULEURS CONTRASTÉES ET LOGO CORRIGÉ */
-    .presentation-story { max-width: 1200px; margin: 50px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+    /* STORY DESIGN UNIQUE */
+    .presentation-story { max-width: 1200px; margin: 30px auto 40px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
     .story-text { background: var(--bg-card); border-radius: 32px; padding: 40px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
     .story-text h2 { font-size: 2.4rem; margin-bottom: 20px; color: var(--accent); border-left: 6px solid var(--gold); padding-left: 15px; }
     .story-text p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 20px; }
@@ -74,21 +75,25 @@
     .story-logo-highlight { background: linear-gradient(45deg, #170d0b, #2c1c18); border: 4px solid var(--gold); border-radius: 50%; padding: 10px; width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); max-width: 420px; margin: 0 auto; overflow: hidden; }
     .story-logo-large { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-    /* SECTION CONTACT STYLE PREMIUM */
-    .contact-grid { max-width: 1300px; margin: 30px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+    /* SECTION CONTACT RESPONSIVE STYLE PREMIUM */
+    .contact-grid { max-width: 1300px; margin: 20px auto 40px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
     .contact-card-info { background: linear-gradient(135deg, #2c1c18 0%, #170d0b 100%); border: 3px solid var(--gold); border-radius: 36px; padding: 40px; color: white; box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
     .contact-card-info h2 { font-size: 2rem; color: var(--gold); margin-bottom: 25px; }
     .contact-item { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; }
     .contact-icon-box { background: rgba(255,255,255,0.07); border: 1px solid rgba(223,168,70,0.3); width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
     .contact-det h4 { font-size: 0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
     .contact-det p { font-size: 1.1rem; color: #f5efe6; line-height: 1.5; }
-    .contact-det a { color: #fff; text-decoration: underline; font-weight: 600; }
+    .contact-det a { color: #fff; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+    .contact-det a:hover { color: var(--gold); text-decoration: underline; }
     
+    /* Bouton d'action pour le téléphone et adresse (GPS) sur mobile */
+    .action-badge-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; background: var(--gold); color: #170d0b !important; padding: 4px 10px; border-radius: 8px; font-weight: 700; margin-top: 6px; text-transform: uppercase; }
+
     .contact-form-box { background: white; border: 2px solid var(--border); border-radius: 36px; padding: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
     .contact-form-box h2 { font-size: 2rem; margin-bottom: 10px; color: var(--text); }
     .contact-form-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 1rem; }
 
-    /* BOUTONS STYLE UNIQUE */
+    /* BOUTONS GENERAUX */
     .btn { padding: 15px 30px; border-radius: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem; justify-content: center; border: none; font-family: inherit; }
     .btn-primary { background: var(--accent); color: white; }
     .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(217, 43, 43, 0.3); }
@@ -147,14 +152,50 @@
 
     .success-icon { width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px; }
 
+    /* 📱 VERSION MOBILE RESPONSIVE ET ULTRA-STYLISEE (DÉDIÉE AUX SMARTPHONES) */
     @media (max-width: 992px) {
       .admin-grid-layout { grid-template-columns: 1fr; gap: 20px; }
-      .presentation-story { grid-template-columns: 1fr; gap: 40px; }
+      .presentation-story { grid-template-columns: 1fr; gap: 35px; }
       .contact-grid { grid-template-columns: 1fr; gap: 30px; }
     }
+    
     @media (max-width: 768px) {
+      nav { 
+        height: auto; 
+        padding: 15px 4%; 
+        flex-direction: column; 
+        gap: 15px; 
+        text-align: center;
+      }
+      .logo-container { flex-direction: column; gap: 6px; }
+      .logo-img { height: 65px; width: 65px; }
+      .logo-text { font-size: 1.4rem; }
+      
+      .nav-links { width: 100%; justify-content: center; flex-wrap: wrap; gap: 6px; }
+      .nav-link-btn { padding: 10px 16px; font-size: 0.85rem; flex-grow: 1; text-align: center; }
+
+      .page-section { padding-top: 185px; } /* Ajustement pour la hauteur de la navbar mobile */
+      
+      .hero-banner { padding: 50px 20px; border-radius: 28px; }
+      .hero h1 { font-size: 1.9rem; margin-bottom: 15px; }
+      .hero p { font-size: 1rem; margin-bottom: 25px; }
+      
+      .story-text { padding: 25px; border-radius: 24px; }
+      .story-text h2 { font-size: 1.8rem; }
+      .story-logo-highlight { max-width: 280px; }
+
+      .contact-card-info, .contact-form-box { padding: 25px; border-radius: 28px; }
+      .contact-card-info h2, .contact-form-box h2 { font-size: 1.6rem; }
+      .contact-det p { font-size: 1rem; }
+
+      .admin-fullscreen-view { padding: 20px 4%; }
+      .admin-header-row { flex-direction: column; gap: 15px; text-align: center; align-items: center; }
+      .admin-main-panel { padding: 25px; border-radius: 24px; }
+      
       .products-grid { grid-template-columns: 1fr; gap: 20px; }
-      nav { height: auto; padding: 15px 5%; flex-direction: column; gap: 15px; }
+      .product-card { border-radius: 28px; }
+      .prod-content { padding: 20px; }
+      .prod-title { font-size: 1.2rem; }
     }
   </style>
 </head>
@@ -218,7 +259,8 @@
             <div class="contact-icon-box">📞</div>
             <div class="contact-det">
               <h4>Téléphone Atelier</h4>
-              <p><a id="view-ctx-phone" href="tel:0600000000">06 00 00 00 00</a></p>
+              <p><a id="view-ctx-phone" href="tel:#">[Chargement...]</a></p>
+              <a id="mobile-call-badge" href="tel:#" class="action-badge-link">Appeler direct</a>
             </div>
           </div>
 
@@ -226,7 +268,8 @@
             <div class="contact-icon-box">📍</div>
             <div class="contact-det">
               <h4>Adresse & Cuisine</h4>
-              <p id="view-ctx-address">12 Rue de la Gastronomie, 75000 Paris</p>
+              <p id="view-ctx-address">[Chargement...]</p>
+              <a id="mobile-gps-badge" href="#" target="_blank" class="action-badge-link">Ouvrir GPS</a>
             </div>
           </div>
 
@@ -234,7 +277,7 @@
             <div class="contact-icon-box">✉️</div>
             <div class="contact-det">
               <h4>Email de contact</h4>
-              <p><a id="view-ctx-email" href="mailto:contact@diegotraiteur.com">contact@diegotraiteur.com</a></p>
+              <p><a id="view-ctx-email" href="mailto:#">[Chargement...]</a></p>
             </div>
           </div>
 
@@ -242,7 +285,7 @@
             <div class="contact-icon-box">🕒</div>
             <div class="contact-det">
               <h4>Horaires de Réception</h4>
-              <p id="view-ctx-hours" style="white-space: pre-line;">Lundi au Samedi : 8h00 - 19h30\nDimanche : 8h00 - 13h00</p>
+              <p id="view-ctx-hours" style="white-space: pre-line;">[Chargement...]</p>
             </div>
           </div>
         </div>
@@ -253,7 +296,7 @@
           
           <div class="form-group"><label>Votre Nom</label><input type="text" id="c-direct-name" placeholder="Ex: Jean Dupont"></div>
           <div class="form-group"><label>Numéro de téléphone</label><input type="tel" id="c-direct-phone" placeholder="Ex: 06 12 34 56 78"></div>
-          <div class="form-group"><label>Votre Message / Projet</label><textarea id="c-direct-msg" style="height: 120px;" placeholder="Dites-nous tout..."></textarea></div>
+          <div class="form-group"><label>Votre Message / Projet</label><textarea id="c-direct-msg" style="height: 120px;" placeholder="Dites-nous tout ce que vous désirez..."></textarea></div>
           
           <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="submitDirectContact()">🚀 Envoyer le message</button>
         </div>
@@ -266,9 +309,9 @@
     <div class="admin-header-row">
       <div>
         <h1 style="font-size: 2.3rem; color: var(--text);">🛠️ Espace Pro DiegoTraiteur</h1>
-        <p style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;">Éditez vos menus, vos coordonnées et gérez la clientèle</p>
+        <p style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;">Éditez vos menus, vos coordonnées cloud et gérez la clientèle</p>
       </div>
-      <button class="btn btn-secondary" onclick="exitAdminView()">⬅️ Quitter l'administration</button>
+      <button class="btn btn-secondary" onclick="exitAdminView()">⬅️ Quitter</button>
     </div>
 
     <div class="admin-grid-layout">
@@ -277,7 +320,7 @@
         <button class="admin-nav-item" id="pan-products-btn" onclick="switchAdminPanel('products')">🍳 Ajouter un Plat</button>
         <button class="admin-nav-item" id="pan-stock-btn" onclick="switchAdminPanel('stock')">🗂️ Gérer la Vitrine</button>
         <button class="admin-nav-item" id="pan-edit-site-btn" onclick="switchAdminPanel('edit-site')">✍️ Éditer l'Accueil</button>
-        <button class="admin-nav-item" id="pan-edit-contact-btn" onclick="switchAdminPanel('edit-contact')">📞 Éditer les Contacts</button>
+        <button class="admin-nav-item" id="pan-edit-contact-btn" onclick="switchAdminPanel('edit-contact')">📞 Éditer les Contacts (Cloud)</button>
         <button class="admin-nav-item" id="pan-security-btn" onclick="switchAdminPanel('security')">🔐 Sécurité & Accès</button>
       </div>
 
@@ -314,12 +357,13 @@
         </div>
 
         <div id="panel-edit-contact" class="panel-section">
-          <h2 style="margin-bottom: 25px; color: var(--accent);">Gérer vos Coordonnées publiques</h2>
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Gérer vos Coordonnées (Sauvegarde Globale Cloud)</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Les infos rentrées ici se mettront à jour immédiatement sur PC et Téléphone portable.</p>
           <div class="form-group"><label>Numéro de Téléphone</label><input type="text" id="edit-ctx-phone"></div>
-          <div class="form-group"><label>Adresse Professionnelle</label><input type="text" id="edit-ctx-address"></div>
+          <div class="form-group"><label>Adresse Professionnelle (Cuisine)</label><input type="text" id="edit-ctx-address"></div>
           <div class="form-group"><label>Email commercial</label><input type="text" id="edit-ctx-email"></div>
-          <div class="form-group"><label>Horaires d'Ouverture (Sauter des lignes librement)</label><textarea id="edit-ctx-hours" style="height: 100px;"></textarea></div>
-          <button class="btn btn-primary" style="width:100%; margin-top: 15px; background: #dfa846; border: none; color: black;" onclick="saveContactInfo()">💾 Mettre à jour la fiche contact</button>
+          <div class="form-group"><label>Horaires d'Ouverture (Sauts de ligne autorisés)</label><textarea id="edit-ctx-hours" style="height: 100px;"></textarea></div>
+          <button class="btn btn-primary" style="width:100%; margin-top: 15px; background: #dfa846; border: none; color: black;" onclick="saveContactInfoCloud()">💾 Publier la fiche contact sur tous les téléphones</button>
         </div>
 
         <div id="panel-security" class="panel-section">
@@ -374,6 +418,8 @@
     const API_PRODUCTS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/products";
     const API_ORDERS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/orders";
     const API_TEXTS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/site_texts";
+    // Nouveau endpoint MockAPI pour stocker de façon pérenne tes coordonnées de contact
+    const API_CONTACT_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/contact_info";
 
     let products = [];
     let cloudOrders = [];
@@ -387,8 +433,9 @@
       storyBody2: "Chaque pièce est sélectionnée rigoureusement, travaillée et dressée avec soin pour garantir une fraîcheur irréprochable et une explosion de saveurs en bouche."
     };
 
-    // Coordonnées stockées par défaut
-    let contactInfo = JSON.parse(localStorage.getItem('diegotraiteur_contact')) || {
+    // Coordonnées de secours (fallbacks) au cas où l'API met du temps à se créer
+    let contactInfo = {
+      id: "1",
       phone: "06 12 34 56 78",
       address: "Atelier DiegoTraiteur, 66000 Perpignan",
       email: "diego.traiteur66@gmail.com",
@@ -401,7 +448,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       fetchDataFromCloud();
       fetchTextsFromCloud();
-      applyContactToUI();
+      fetchContactFromCloud();
     });
 
     function switchMainPage(pageId) {
@@ -409,6 +456,7 @@
       document.querySelectorAll('.nav-link-btn').forEach(btn => btn.classList.remove('active'));
       document.getElementById(`page-${pageId}`).classList.add('active');
       document.getElementById(`link-${pageId}`).classList.add('active');
+      window.scrollTo(0,0);
     }
 
     async function fetchDataFromCloud() {
@@ -432,6 +480,20 @@
       applyTextsToUI();
     }
 
+    // CHARGEMENT DE TES INFOS CONTACT DEPUIS MOCKAPI
+    async function fetchContactFromCloud() {
+      try {
+        const res = await fetch(`${API_CONTACT_URL}/1`);
+        if(res.ok) {
+          contactInfo = await res.json();
+        } else {
+          // Si c'est la première fois, on initialise l'API avec les données de base
+          await fetch(API_CONTACT_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(contactInfo) });
+        }
+      } catch (e) {}
+      applyContactToUI();
+    }
+
     function applyTextsToUI() {
       document.getElementById('view-hero-title').innerText = siteTexts.heroTitle;
       document.getElementById('view-hero-desc').innerText = siteTexts.heroDesc;
@@ -443,7 +505,11 @@
     function applyContactToUI() {
       document.getElementById('view-ctx-phone').innerText = contactInfo.phone;
       document.getElementById('view-ctx-phone').href = "tel:" + contactInfo.phone.replace(/\s+/g, '');
+      document.getElementById('mobile-call-badge').href = "tel:" + contactInfo.phone.replace(/\s+/g, '');
+      
       document.getElementById('view-ctx-address').innerText = contactInfo.address;
+      document.getElementById('mobile-gps-badge').href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(contactInfo.address);
+      
       document.getElementById('view-ctx-email').innerText = contactInfo.email;
       document.getElementById('view-ctx-email').href = "mailto:" + contactInfo.email;
       document.getElementById('view-ctx-hours').innerText = contactInfo.hours;
@@ -468,7 +534,7 @@
         document.getElementById('edit-story-body-1').value = siteTexts.storyBody1;
         document.getElementById('edit-story-body-2').value = siteTexts.storyBody2;
 
-        // Pré-remplir la configuration contact
+        // Pré-remplir la configuration contact avec les infos de l'API Cloud
         document.getElementById('edit-ctx-phone').value = contactInfo.phone;
         document.getElementById('edit-ctx-address').value = contactInfo.address;
         document.getElementById('edit-ctx-email').value = contactInfo.email;
@@ -482,16 +548,32 @@
       } else { alert("Accès refusé."); }
     }
 
-    function saveContactInfo() {
-      contactInfo.phone = document.getElementById('edit-ctx-phone').value.trim();
-      contactInfo.address = document.getElementById('edit-ctx-address').value.trim();
-      contactInfo.email = document.getElementById('edit-ctx-email').value.trim();
-      contactInfo.hours = document.getElementById('edit-ctx-hours').value.trim();
+    // SAUVEGARDE SECURISEE DES COORDONNEES DANS LE CLOUD MOCKAPI
+    async function saveContactInfoCloud() {
+      const payload = {
+        phone: document.getElementById('edit-ctx-phone').value.trim(),
+        address: document.getElementById('edit-ctx-address').value.trim(),
+        email: document.getElementById('edit-ctx-email').value.trim(),
+        hours: document.getElementById('edit-ctx-hours').value.trim()
+      };
 
-      localStorage.setItem('diegotraiteur_contact', JSON.stringify(contactInfo));
-      applyContactToUI();
-      alert("✅ Fiche contact mise à jour avec succès !");
-      exitAdminView();
+      try {
+        const res = await fetch(`${API_CONTACT_URL}/1`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if(res.ok) {
+          contactInfo = await res.json();
+          applyContactToUI();
+          alert("✅ Coordonnées publiées mondialement sur le Cloud MockAPI ! Dispo sur tous les téléphones.");
+          exitAdminView();
+        } else {
+          alert("Erreur lors de la liaison au serveur cloud.");
+        }
+      } catch (e) {
+        alert("Impossible de joindre MockAPI.");
+      }
     }
 
     async function submitDirectContact() {
