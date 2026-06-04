@@ -4,25 +4,22 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>DIEGOTRAITEUR — Qualité & Tradition Culinaire</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
   
-  <script src="https://www.paypal.com/sdk/js?client-id=METS_TON_CLIENT_ID_ICI&currency=EUR"></script>
-
   <style>
     :root {
-      --accent: #d92b2b;
+      --accent: #d92b2b; /* Rouge signature de ton logo */
       --accent-hover: #b31e1e;
       --accent-light: #fff0f0;
-      --gold: #dfa846;
-      --bg: #0d0908;
-      --bg-card: #17100e;
-      --bg-card-hover: #211714;
-      --bg-nav: rgba(13, 9, 8, 0.8);
-      --border: rgba(223, 168, 70, 0.15);
-      --border-hover: rgba(223, 168, 70, 0.4);
-      --text: #fdf6ec; 
-      --text-muted: #a69995;
-      --success: #10b981;
+      --gold: #dfa846; /* Touche dorée/crème festive */
+      --bg: linear-gradient(135deg, #fdf6ec 0%, #f7e6d4 100%); /* Fond riche en couleurs chaudes */
+      --bg-card: #ffffff;
+      --bg-card-hover: #fffaf4;
+      --bg-nav: rgba(253, 246, 236, 0.9);
+      --border: #ebd1b7;
+      --border-hover: #dfa846;
+      --text: #1c1917; 
+      --text-muted: #57534e;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -30,349 +27,388 @@
     body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
     h1, h2, h3, h4, .logo-text { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.5px; }
 
-    /* BARRE DE NAVIGATION */
+    /* NAVBAR AVEC LOGO BIEN ROND ET PROPRE */
     nav { 
       position: fixed; top: 0; left: 0; right: 0; z-index: 100; 
-      height: 85px; display: flex; align-items: center; justify-content: space-between; 
-      padding: 0 5%; background: var(--bg-nav); border-bottom: 1px solid var(--border); 
+      height: 95px; display: flex; align-items: center; justify-content: space-between; 
+      padding: 0 5%; background: var(--bg-nav); border-bottom: 2px solid var(--border); 
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     }
-    .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
-    .logo-img { height: 55px; width: 55px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold); background: white; }
-    .logo-text { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .logo-container { display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
+    
+    /* Correction du logo carré : object-fit cover + background noir + clip-path garantissent un rond parfait sans bandes blanches */
+    .logo-img { 
+      height: 72px; width: 72px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: 50%; 
+      border: 3px solid var(--gold); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+      background: #170d0b; 
+    }
+    .logo-text { font-size: 1.6rem; font-weight: 700; color: var(--text); }
     .logo-text span { color: var(--accent); }
     
-    .nav-links { display: flex; gap: 10px; align-items: center; }
-    .nav-link-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.9rem; font-weight: 700; cursor: pointer; padding: 10px 20px; border-radius: 99px; transition: all 0.2s; }
-    .nav-link-btn:hover { color: var(--text); border-color: var(--gold); }
+    .nav-links { display: flex; gap: 10px; }
+    .nav-link-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.95rem; font-weight: 700; cursor: pointer; padding: 12px 22px; border-radius: 99px; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+    .nav-link-btn:hover { color: var(--text); border-color: var(--gold); background: var(--bg-card-hover); }
     .nav-link-btn.active { color: white; background: var(--accent); border-color: var(--accent); }
-    .cart-count { background: var(--gold); color: black; font-size: 0.75rem; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin-left: 5px; }
-    .nav-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); font-size: 0.95rem; font-weight: 600; cursor: pointer; padding: 10px 20px; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; }
 
-    /* CONTROLES ET FILTRES */
-    .controls-row { padding: 110px 5% 10px; max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
-    .search-wrapper { position: relative; flex-grow: 1; max-width: 400px; width: 100%; }
-    .search-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: white; padding: 12px 20px; border-radius: 100px; outline: none; font-family: inherit; font-size: 0.9rem; transition: all 0.2s; }
-    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(217, 43, 43, 0.15); }
-    .sort-select { background: var(--bg-card); border: 1px solid var(--border); color: white; padding: 12px 20px; border-radius: 100px; outline: none; font-family: inherit; cursor: pointer; font-size: 0.9rem; }
-
-    /* SECTIONS */
-    .page-section { display: none; animation: fadeIn 0.4s ease forwards; }
+    /* SECTIONS ANIMÉES */
+    .page-section { display: none; padding-top: 130px; animation: fadeIn 0.4s ease forwards; }
     .page-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* HERO BANNER */
+    /* MEILLEUR LOOK POUR LA VITRINE / HERO */
     .hero { padding: 10px 5% 30px; max-width: 1400px; margin: 0 auto; }
-    .hero-banner { background: linear-gradient(180deg, #1f1411 0%, #0d0908 100%); border: 1px solid var(--border); border-radius: 32px; padding: 70px 50px; position: relative; overflow: hidden; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .hero h1 { font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 800; line-height: 1.1; margin-bottom: 15px; background: linear-gradient(180deg, #fff 40%, var(--gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px; line-height: 1.6; }
+    .hero-banner { background: linear-gradient(135deg, #2c1c18 0%, #170d0b 100%); border: 3px solid var(--gold); border-radius: 40px; padding: 90px 40px; text-align: center; color: #fff; box-shadow: 0 10px 30px rgba(44,28,24,0.15); }
+    .hero h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); font-weight: 800; line-height: 1.1; margin-bottom: 25px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .hero p { color: #f5efe6; font-size: 1.2rem; max-width: 750px; margin: 0 auto 40px; line-height: 1.7; opacity: 0.9; }
 
-    /* BOUTONS */
-    .btn { padding: 14px 28px; border-radius: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 0.95rem; justify-content: center; border: none; font-family: inherit; }
+    /* STORY AVEC DES COULEURS CONTRASTÉES ET LOGO CORRIGÉ */
+    .presentation-story { max-width: 1200px; margin: 50px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+    .story-text { background: var(--bg-card); border-radius: 32px; padding: 40px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
+    .story-text h2 { font-size: 2.4rem; margin-bottom: 20px; color: var(--accent); border-left: 6px solid var(--gold); padding-left: 15px; }
+    .story-text p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 20px; }
+    
+    .story-logo-highlight { background: linear-gradient(45deg, #170d0b, #2c1c18); border: 4px solid var(--gold); border-radius: 50%; padding: 10px; width: 100%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); max-width: 420px; margin: 0 auto; overflow: hidden; }
+    .story-logo-large { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+    /* SECTION CONTACT STYLE PREMIUM */
+    .contact-grid { max-width: 1300px; margin: 30px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+    .contact-card-info { background: linear-gradient(135deg, #2c1c18 0%, #170d0b 100%); border: 3px solid var(--gold); border-radius: 36px; padding: 40px; color: white; box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+    .contact-card-info h2 { font-size: 2rem; color: var(--gold); margin-bottom: 25px; }
+    .contact-item { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 30px; }
+    .contact-icon-box { background: rgba(255,255,255,0.07); border: 1px solid rgba(223,168,70,0.3); width: 52px; height: 52px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .contact-det h4 { font-size: 0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .contact-det p { font-size: 1.1rem; color: #f5efe6; line-height: 1.5; }
+    .contact-det a { color: #fff; text-decoration: underline; font-weight: 600; }
+    
+    .contact-form-box { background: white; border: 2px solid var(--border); border-radius: 36px; padding: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.02); }
+    .contact-form-box h2 { font-size: 2rem; margin-bottom: 10px; color: var(--text); }
+    .contact-form-box p { color: var(--text-muted); margin-bottom: 30px; font-size: 1rem; }
+
+    /* BOUTONS STYLE UNIQUE */
+    .btn { padding: 15px 30px; border-radius: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem; justify-content: center; border: none; font-family: inherit; }
     .btn-primary { background: var(--accent); color: white; }
-    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(217, 43, 43, 0.3); }
-    .btn-secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--gold); }
-    .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(217, 43, 43, 0.3); }
+    .btn-secondary { background: var(--bg-card); color: var(--text); border: 2px solid var(--gold); }
+    .btn-secondary:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+    .btn-danger { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
     .btn-danger:hover { background: #ef4444; color: white; }
 
-    /* CATALOGUE */
+    /* FILTRES & GRILLE DE PRODUITS */
+    .controls-row { padding: 20px 5% 10px; max-width: 1400px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; align-items: center; }
+    .grid-title { font-size: 1.8rem; font-weight: 700; color: var(--text); }
+    .search-input { width: 100%; background: var(--bg-card); border: 2px solid var(--border); color: var(--text); padding: 14px 24px; border-radius: 100px; outline: none; font-family: inherit; font-size: 0.95rem; transition: all 0.2s; }
+    .search-input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 4px 15px rgba(217,43,43,0.08); }
+    
     .shop-container { padding: 20px 5% 80px; max-width: 1400px; margin: 0 auto; }
-    .grid-title { margin-bottom: 30px; font-size: 1.8rem; font-weight: 700; text-align: center; color: var(--gold); }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 30px; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
     
-    .product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 28px; overflow: hidden; transition: all 0.3s; display: flex; flex-direction: column; }
-    .product-card:hover { transform: translateY(-6px); border-color: var(--gold); background: var(--bg-card-hover); }
-    .prod-img-wrapper { width: 100%; aspect-ratio: 1.1; background: #130d0b; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); }
+    .product-card { background: var(--bg-card); border: 2px solid var(--border); border-radius: 36px; overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; box-shadow: 0 6px 18px rgba(0,0,0,0.03); }
+    .product-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 15px 30px rgba(223,168,70,0.15); }
+    .prod-img-wrapper { width: 100%; aspect-ratio: 1.15; background: #fffdfa; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border-bottom: 2px solid var(--border); }
     .prod-img { width: 100%; height: 100%; object-fit: cover; }
-    .prod-content { padding: 24px; display: flex; flex-direction: column; flex-grow: 1; }
-    .prod-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: #fff; }
-    .prod-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px; }
-    .prod-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 15px; }
-    .prod-price { font-size: 1.4rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; color: var(--gold); }
+    .prod-content { padding: 26px; display: flex; flex-direction: column; flex-grow: 1; }
+    .prod-title { font-size: 1.35rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+    .prod-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; }
+    .prod-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .prod-badge { font-size: 0.8rem; background: var(--accent-light); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-weight: 700; border: 1px solid rgba(217,43,43,0.1); }
 
-    /* CONTACT */
-    .contact-container { max-width: 1000px; margin: 40px auto 80px; padding: 0 5%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-    .contact-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 28px; padding: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    .contact-card h2 { font-size: 2rem; color: var(--gold); margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-    .contact-info-line { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 22px; font-size: 1.05rem; line-height: 1.5; }
-    .contact-info-line span.icon { font-size: 1.5rem; color: var(--accent); }
-    .contact-info-line a { color: var(--text); text-decoration: none; font-weight: 600; }
-    .contact-info-line a:hover { color: var(--gold); }
+    /* FENÊTRES FLOTTANTES (MODALES) */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(44, 28, 24, 0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .custom-box { background: #ffffff; border: 3px solid var(--gold); border-radius: 36px; width: 100%; max-width: 550px; padding: 40px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
+    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; padding: 5px; transition: color 0.2s; }
+    .close-btn:hover { color: var(--accent); }
 
-    /* PANIER */
-    .sidebar { position: fixed; top: 0; right: -100%; width: 100%; max-width: 480px; height: 100vh; background: #0b0706; border-left: 1px solid var(--border); z-index: 200; box-shadow: -20px 0 50px rgba(0,0,0,0.8); transition: right 0.45s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 30px; }
-    .sidebar.open { right: 0; }
-    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
-    .sidebar-close { background: none; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; padding: 5px; }
-    .cart-items { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-    .cart-item { display: flex; gap: 15px; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid var(--border); }
-    .cart-item-info { flex-grow: 1; }
-    .cart-item-del { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
-    .cart-footer { padding-top: 25px; border-top: 1px solid var(--border); }
+    .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input, .form-group select, .form-group textarea { background: #fffdfa; border: 1px solid var(--border); color: var(--text); padding: 14px 20px; border-radius: 16px; font-family: inherit; font-size: 0.95rem; outline: none; width: 100%; transition: all 0.2s; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); background: white; }
 
-    /* MODALES ET ADMIN */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .admin-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; padding: 40px; position: relative; }
-    .form-group { margin-bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
-    .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-group input, .form-group select, .form-group textarea { background: var(--bg); border: 1px solid var(--border); color: white; padding: 14px 20px; border-radius: 16px; font-family: inherit; font-size: 0.95rem; outline: none; width: 100%; }
-    .form-group textarea { min-height: 80px; resize: none; }
+    /* 🛠️ CONSOLE ADMIN PRO GRANDE PAGE ENTIÈRE */
+    .admin-fullscreen-view { display: none; background: #fdfaf6; min-height: 100vh; padding: 40px 5%; animation: fadeIn 0.4s ease; border-top: 8px solid var(--accent); }
+    .admin-header-row { max-width: 1300px; margin: 0 auto 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--gold); padding-bottom: 25px; }
+    .admin-grid-layout { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 290px 1fr; gap: 40px; }
     
-    .price-summary-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 15px; margin: 20px 0; font-size: 0.95rem; }
-    .price-summary-line { display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .admin-sidebar-nav { display: flex; flex-direction: column; gap: 10px; }
+    .admin-nav-item { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid var(--border); text-align: left; padding: 16px 20px; border-radius: 16px; color: var(--text-muted); font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.01); }
+    .admin-nav-item:hover { color: var(--text); border-color: var(--gold); background: var(--bg-card-hover); }
+    .admin-nav-item.active { color: white; background: var(--accent); border-color: var(--accent); }
     
-    .admin-nav-tabs { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 10px; overflow-x: auto; }
-    .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; padding: 8px 16px; font-weight: 700; position: relative; white-space: nowrap; }
-    .tab-btn.active { color: var(--accent); }
-    .tab-btn.active::after { content: ''; position: absolute; bottom: -12px; left: 0; right: 0; height: 3px; background: var(--accent); border-radius: 10px; }
-    
-    .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: var(--bg); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 12px; }
-    .order-row { background: var(--bg); padding: 20px; border-radius: 20px; margin-bottom: 15px; border: 1px solid var(--border); }
-    .order-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-    .success-icon { width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px; }
+    .admin-main-panel { background: white; border: 2px solid var(--border); border-radius: 36px; padding: 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); min-height: 600px; }
+    .panel-section { display: none; }
+    .panel-section.active { display: block; }
 
+    .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: #fffdfa; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 12px; }
+    .order-row { background: #fffdfa; padding: 26px; border-radius: 26px; margin-bottom: 20px; border: 2px solid var(--border); }
+    .order-header { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+
+    .success-icon { width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 20px; }
+
+    @media (max-width: 992px) {
+      .admin-grid-layout { grid-template-columns: 1fr; gap: 20px; }
+      .presentation-story { grid-template-columns: 1fr; gap: 40px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+    }
     @media (max-width: 768px) {
-      .contact-container { grid-template-columns: 1fr; gap: 30px; }
-      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .prod-content { padding: 14px; }
-      .prod-title { font-size: 1rem; }
-      .prod-footer { flex-direction: column; align-items: flex-start; gap: 8px; }
-      .prod-price { font-size: 1.15rem; }
-      nav { height: auto; padding: 15px 5%; flex-direction: column; gap: 12px; }
-      .controls-row { padding-top: 170px; }
-      .sidebar { width: 100%; max-width: 100%; }
-      .admin-box { padding: 30px 15px; }
+      .products-grid { grid-template-columns: 1fr; gap: 20px; }
+      nav { height: auto; padding: 15px 5%; flex-direction: column; gap: 15px; }
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo-container" onclick="openSecretAdmin()">
-      <img src="image_ebb786.jpg" class="logo-img" alt="Logo" onerror="this.src='https://placehold.co/100x100?text=Diego'">
-      <span class="logo-text">DIEGOTRAITEUR<span>.</span></span>
-    </div>
-    <div class="nav-links">
-      <button class="nav-link-btn active" id="btn-nav-accueil" onclick="switchSection('accueil')">La Vitrine</button>
-      <button class="nav-link-btn" id="btn-nav-contact" onclick="switchSection('contact')">Nous Contacter</button>
-      <button class="nav-btn" onclick="toggleCart(true)">
-        🛒 Panier <span class="cart-count" id="cart-count">0</span>
-      </button>
-    </div>
-  </nav>
-
-  <div id="section-accueil" class="page-section active">
-    <div class="controls-row">
-      <div class="search-wrapper">
-        <input type="text" id="search-input" class="search-input" placeholder="Rechercher une création gourmande..." oninput="filterAndSortProducts()">
+  <div id="client-view-wrapper">
+    <nav>
+      <div class="logo-container" ondblclick="openSecretAdmin()">
+        <img src="image_ebb786.jpg" class="logo-img" alt="DiegoTraiteur Logo">
+        <span class="logo-text">DIEGOTRAITEUR<span>.</span></span>
       </div>
-      <select id="sort-select" class="sort-select" onchange="filterAndSortProducts()">
-        <option value="default">Tri par défaut</option>
-        <option value="price-asc">Prix : Économique</option>
-        <option value="price-desc">Prix : Premium</option>
-      </select>
-    </div>
-
-    <header class="hero">
-      <div class="hero-banner">
-        <h1>L'Art Culinaire & Haute Tradition.</h1>
-        <p>Plats d'exception, pièces d'orfèvrerie autour du saumon et de la gastronomie fine. Commandes sécurisées avec paiement PayPal intégré.</p>
-        <button class="btn btn-primary" onclick="document.getElementById('shop-section').scrollIntoView()">Découvrir la carte traiteur</button>
+      
+      <div class="nav-links">
+        <button class="nav-link-btn active" id="link-presentation" onclick="switchMainPage('presentation')">Notre Maison</button>
+        <button class="nav-link-btn" id="link-carte" onclick="switchMainPage('carte')">La Carte Traiteur</button>
+        <button class="nav-link-btn" id="link-contact" onclick="switchMainPage('contact')">Nous Contacter</button>
       </div>
-    </header>
+    </nav>
 
-    <main class="shop-container" id="shop-section">
-      <div class="grid-title"><h2>Nos Créations Disponibles</h2></div>
-      <div class="products-grid" id="products-container"></div>
-    </main>
-  </div>
+    <section id="page-presentation" class="page-section active">
+      <header class="hero">
+        <div class="hero-banner">
+          <h1 id="view-hero-title">L'Art du Saumon & Haute Gastronomie</h1>
+          <p id="view-hero-desc">Artisan traiteur d'exception, sublimant l'art du saumon et des créations culinaires raffinées pour tous vos événements.</p>
+          <button class="btn btn-secondary" style="background:#fff; color:var(--text);" onclick="switchMainPage('carte')">Consulter la Carte Gastronomique</button>
+        </div>
+      </header>
 
-  <div id="section-contact" class="page-section">
-    <div style="padding-top: 120px; text-align: center;">
-      <h1 style="color: var(--gold); font-size: 2.5rem;">Prendre Contact avec l'Atelier</h1>
-      <p style="color: var(--text-muted); margin-top: 10px;">Une demande spéciale, un mariage ou un buffet sur-mesure ? Écrivez-nous.</p>
-    </div>
+      <div class="presentation-story">
+        <div class="story-text">
+          <h2 id="view-story-title">Qualité & Tradition</h2>
+          <p id="view-story-body-1">Bienvenue dans l'univers DIEGOTRAITEUR. Spécialisés dans les plats préparés haut de gamme et les pièces d'orfèvrerie autour du saumon, de la boucherie et de la charcuterie fine, nous mettons notre passion au service de vos tables.</p>
+          <p id="view-story-body-2">Chaque pièce est sélectionnée rigoureusement, travaillée et dressée avec soin pour garantir une fraîcheur irréprochable et une explosion de saveurs en bouche.</p>
+        </div>
+        <div class="story-logo-highlight">
+          <img src="image_ebb786.jpg" class="story-logo-large" alt="DiegoTraiteur Grand Logo">
+        </div>
+      </div>
+    </section>
 
-    <div class="contact-container">
-      <div class="contact-card">
-        <h2>Nos Coordonnées</h2>
-        <div class="contact-info-line">
-          <span class="icon">📞</span>
-          <div>
-            <strong>Téléphone Atelier :</strong><br>
-            <a href="tel:" id="info-phone">06 00 00 00 00</a>
+    <section id="page-carte" class="page-section">
+      <div class="controls-row">
+        <div class="grid-title"><h2>Nos Pièces et Plats Signés</h2></div>
+        <div style="max-width: 400px; width:100%;">
+          <input type="text" id="search-input" class="search-input" placeholder="🔍 Rechercher une création..." oninput="filterProducts()">
+        </div>
+      </div>
+
+      <main class="shop-container">
+        <div class="products-grid" id="products-container"></div>
+      </main>
+    </section>
+
+    <section id="page-contact" class="page-section">
+      <div class="contact-grid">
+        
+        <div class="contact-card-info">
+          <h2>Nos Coordonnées</h2>
+          
+          <div class="contact-item">
+            <div class="contact-icon-box">📞</div>
+            <div class="contact-det">
+              <h4>Téléphone Atelier</h4>
+              <p><a id="view-ctx-phone" href="tel:0600000000">06 00 00 00 00</a></p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon-box">📍</div>
+            <div class="contact-det">
+              <h4>Adresse & Cuisine</h4>
+              <p id="view-ctx-address">12 Rue de la Gastronomie, 75000 Paris</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon-box">✉️</div>
+            <div class="contact-det">
+              <h4>Email de contact</h4>
+              <p><a id="view-ctx-email" href="mailto:contact@diegotraiteur.com">contact@diegotraiteur.com</a></p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon-box">🕒</div>
+            <div class="contact-det">
+              <h4>Horaires de Réception</h4>
+              <p id="view-ctx-hours" style="white-space: pre-line;">Lundi au Samedi : 8h00 - 19h30\nDimanche : 8h00 - 13h00</p>
+            </div>
           </div>
         </div>
-        <div class="contact-info-line">
-          <span class="icon">✉️</span>
-          <div>
-            <strong>Adresse E-mail :</strong><br>
-            <a href="mailto:" id="info-email">contact@diegotraiteur.com</a>
-          </div>
+
+        <div class="contact-form-box">
+          <h2>Écrire à l'atelier</h2>
+          <p>Pour un banquet, une commande sur-mesure ou une question, transmettez vos informations instantanément.</p>
+          
+          <div class="form-group"><label>Votre Nom</label><input type="text" id="c-direct-name" placeholder="Ex: Jean Dupont"></div>
+          <div class="form-group"><label>Numéro de téléphone</label><input type="tel" id="c-direct-phone" placeholder="Ex: 06 12 34 56 78"></div>
+          <div class="form-group"><label>Votre Message / Projet</label><textarea id="c-direct-msg" style="height: 120px;" placeholder="Dites-nous tout..."></textarea></div>
+          
+          <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="submitDirectContact()">🚀 Envoyer le message</button>
         </div>
-        <div class="contact-info-line">
-          <span class="icon">📍</span>
-          <div>
-            <strong>Notre Adresse :</strong><br>
-            <span id="info-address" style="color: white; font-weight: 600;">12 rue de la Gastronomie, 75000 Paris</span>
-          </div>
-        </div>
-        <div class="contact-info-line">
-          <span class="icon">⏰</span>
-          <div>
-            <strong>Horaires :</strong><br>
-            <span id="info-hours" style="color: var(--text-muted);">7j/7 — De 08:00 à 20:00</span>
-          </div>
-        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <div id="admin-fullscreen-view" class="admin-fullscreen-view">
+    <div class="admin-header-row">
+      <div>
+        <h1 style="font-size: 2.3rem; color: var(--text);">🛠️ Espace Pro DiegoTraiteur</h1>
+        <p style="color: var(--text-muted); font-size: 1rem; margin-top: 6px;">Éditez vos menus, vos coordonnées et gérez la clientèle</p>
+      </div>
+      <button class="btn btn-secondary" onclick="exitAdminView()">⬅️ Quitter l'administration</button>
+    </div>
+
+    <div class="admin-grid-layout">
+      <div class="admin-sidebar-nav">
+        <button class="admin-nav-item active" id="pan-orders-btn" onclick="switchAdminPanel('orders')">📬 Demandes Reçues (<span id="orders-badge">0</span>)</button>
+        <button class="admin-nav-item" id="pan-products-btn" onclick="switchAdminPanel('products')">🍳 Ajouter un Plat</button>
+        <button class="admin-nav-item" id="pan-stock-btn" onclick="switchAdminPanel('stock')">🗂️ Gérer la Vitrine</button>
+        <button class="admin-nav-item" id="pan-edit-site-btn" onclick="switchAdminPanel('edit-site')">✍️ Éditer l'Accueil</button>
+        <button class="admin-nav-item" id="pan-edit-contact-btn" onclick="switchAdminPanel('edit-contact')">📞 Éditer les Contacts</button>
+        <button class="admin-nav-item" id="pan-security-btn" onclick="switchAdminPanel('security')">🔐 Sécurité & Accès</button>
       </div>
 
-      <div class="contact-card">
-        <h2>Envoyer un message</h2>
-        <form onsubmit="submitDirectMessage(event)">
-          <div class="form-group"><label>Nom Complet</label><input type="text" id="m-name" required placeholder="Ex: M. Dupont"></div>
-          <div class="form-group"><label>Votre Mobile</label><input type="tel" id="m-phone" required placeholder="Ex: 06..."></div>
-          <div class="form-group"><label>Votre Message / Projet</label><textarea id="m-body" required placeholder="Détaillez votre besoin..."></textarea></div>
-          <button type="submit" class="btn btn-primary" style="width: 100%;">🚀 Envoyer la demande</button>
-        </form>
+      <div class="admin-main-panel">
+        
+        <div id="panel-orders" class="panel-section active">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Fiches clients enregistrées</h2>
+          <div id="orders-log-container"></div>
+        </div>
+
+        <div id="panel-products" class="panel-section">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Ajouter une création à la carte</h2>
+          <form id="product-form" onsubmit="addProductCloud(event)">
+            <div class="form-group"><label>Nom de la création</label><input type="text" id="p-title" required placeholder="Ex: Saumon Fumé ficelle artisanal"></div>
+            <div class="form-group"><label>Lien d'une photo internet (Optionnel)</label><input type="text" id="p-img" placeholder="https://..."></div>
+            <div class="form-group"><label>Description culinaire & détails</label><textarea id="p-desc" required placeholder="Nombre d'ingrédients..."></textarea></div>
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 15px;">🚀 Injecter et mettre en ligne</button>
+          </form>
+        </div>
+
+        <div id="panel-stock" class="panel-section">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Retirer des articles de la vitrine</h2>
+          <div id="stock-list-container"></div>
+        </div>
+
+        <div id="panel-edit-site" class="panel-section">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Modifier les textes éditoriaux</h2>
+          <div class="form-group"><label>Grand Titre de la Vitrine</label><input type="text" id="edit-hero-title"></div>
+          <div class="form-group"><label>Slogan accroche</label><textarea id="edit-hero-desc"></textarea></div>
+          <div class="form-group"><label>Titre Histoire</label><input type="text" id="edit-story-title"></div>
+          <div class="form-group"><label>Histoire - Paragraphe 1</label><textarea id="edit-story-body-1"></textarea></div>
+          <div class="form-group"><label>Histoire - Paragraphe 2</label><textarea id="edit-story-body-2"></textarea></div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="saveSiteTextsCloud()">💾 Publier les nouveaux textes</button>
+        </div>
+
+        <div id="panel-edit-contact" class="panel-section">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Gérer vos Coordonnées publiques</h2>
+          <div class="form-group"><label>Numéro de Téléphone</label><input type="text" id="edit-ctx-phone"></div>
+          <div class="form-group"><label>Adresse Professionnelle</label><input type="text" id="edit-ctx-address"></div>
+          <div class="form-group"><label>Email commercial</label><input type="text" id="edit-ctx-email"></div>
+          <div class="form-group"><label>Horaires d'Ouverture (Sauter des lignes librement)</label><textarea id="edit-ctx-hours" style="height: 100px;"></textarea></div>
+          <button class="btn btn-primary" style="width:100%; margin-top: 15px; background: #dfa846; border: none; color: black;" onclick="saveContactInfo()">💾 Mettre à jour la fiche contact</button>
+        </div>
+
+        <div id="panel-security" class="panel-section">
+          <h2 style="margin-bottom: 25px; color: var(--accent);">Modifier les identifiants de la console Pro</h2>
+          <div class="form-group"><label>Nouvel Identifiant</label><input type="text" id="new-admin-user"></div>
+          <div class="form-group"><label>Nouveau Mot de passe</label><input type="password" id="new-admin-pass"></div>
+          <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="changeAdminCredentials()">🔒 Enregistrer les nouveaux accès</button>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <div class="sidebar" id="cart-sidebar">
-    <div class="sidebar-header">
-      <h3>Votre Sélection</h3>
-      <button class="sidebar-close" onclick="toggleCart(false)">✕</button>
-    </div>
-    <div class="cart-items" id="cart-items-container"></div>
-    <div class="cart-footer">
-      <div style="display:flex; justify-content:space-between; font-size:1.3rem; font-weight:700; margin-bottom:20px;">
-        <span>Sous-total</span> <span id="cart-total-price" style="color:var(--gold);">0.00 €</span>
+  <div class="modal-overlay" id="request-modal">
+    <div class="custom-box">
+      <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 25px;">
+        <h3>Demander une formule / Devis</h3>
+        <button class="close-btn" onclick="closeModal('request-modal')">✕</button>
       </div>
-      <button class="btn btn-primary" style="width: 100%;" onclick="openCheckoutModal()">📦 Passer la commande</button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="checkout-modal">
-    <div class="admin-box" style="max-width: 600px;">
-      <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
-        <h3>📋 Adresse de Livraison</h3>
-        <button class="sidebar-close" onclick="closeModal('checkout-modal')">✕</button>
-      </div>
-      <div class="form-group"><label>Nom Complet</label><input type="text" id="c-name"></div>
-      <div class="form-group"><label>Téléphone Mobile</label><input type="tel" id="c-phone"></div>
-      <div class="form-group"><label>Adresse Complète</label><textarea id="c-address"></textarea></div>
-      <div class="price-summary-box">
-        <div class="price-summary-line"><span>Total Créations :</span> <span id="summary-subtotal">0.00 €</span></div>
-        <div class="price-summary-line"><span>Livraison fixe :</span> <span>4.00 €</span></div>
-        <div class="price-summary-line" style="font-weight:700; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); color:white;">
-          <span>Total à régler :</span> <span id="summary-total">0.00 €</span>
-        </div>
-      </div>
-      <button class="btn btn-primary" style="width: 100%;" onclick="proceedToPaymentStage()">🔒 Valider et payer</button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="payment-modal">
-    <div class="admin-box" style="max-width: 460px;">
-      <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
-        <h3>💳 Paiement Traiteur</h3>
-        <button class="sidebar-close" onclick="closeModal('payment-modal')">✕</button>
-      </div>
-      <div style="text-align: center; margin-bottom: 25px;">
-        <span style="color: var(--text-muted);">Montant total :</span>
-        <h2 id="payment-grand-total" style="font-size: 2.2rem; color: var(--gold); margin-top: 5px; font-family: 'Space Grotesk';">0.00 €</h2>
-      </div>
-      <div id="paypal-button-container"></div>
-      <button class="btn btn-secondary" style="width: 100%; margin-top: 15px; border:none;" onclick="backToAddressStage()">⬅️ Retour</button>
+      <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">Intéressé par : <strong id="req-product-title" style="color: var(--accent);">[Nom du plat]</strong>.</p>
+      <input type="hidden" id="req-product-id">
+      <div class="form-group"><label>Votre Nom Complet</label><input type="text" id="r-name" required></div>
+      <div class="form-group"><label>Numéro de Téléphone</label><input type="tel" id="r-phone" required></div>
+      <div class="form-group"><label>Message / Précisions (Date, parts...)</label><textarea id="r-message"></textarea></div>
+      <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="submitClientRequest()">🔔 Envoyer la demande</button>
     </div>
   </div>
 
   <div class="modal-overlay" id="success-modal">
-    <div class="admin-box" style="max-width: 450px;">
-      <div style="text-align: center;">
-        <div class="success-icon">✓</div>
-        <h2>Commande Enregistrée !</h2>
-        <p style="color: #a1a1aa; line-height: 1.6; margin: 15px 0 25px;">Votre paiement a été validé. L'atelier commence immédiatement la préparation.</p>
-        <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('success-modal')">Fermer</button>
-      </div>
+    <div class="custom-box" style="max-width: 450px; text-align: center;">
+      <div class="success-icon">✓</div>
+      <h2>Message Transmis !</h2>
+      <p style="color: var(--text-muted); margin: 15px 0 25px; line-height: 1.6;">L'équipe DiegoTraiteur a bien reçu votre demande et vous recontactera rapidement par téléphone.</p>
+      <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('success-modal')">Retour</button>
     </div>
   </div>
 
   <div class="modal-overlay" id="login-modal">
-    <div class="admin-box" style="max-width: 400px; text-align: center;">
-      <h2>🔐 Espace Pro DiegoTraiteur</h2>
+    <div class="custom-box" style="max-width: 400px; text-align: center;">
+      <img src="image_ebb786.jpg" style="height: 80px; width: 80px; border-radius:50%; margin-bottom: 15px; background: #170d0b; object-fit: cover; border: 2px solid var(--gold);" alt="Logo">
+      <h2>Espace Sécurisé</h2>
       <div class="form-group" style="margin-top:15px;"><input type="text" id="admin-user" placeholder="Identifiant"></div>
       <div class="form-group"><input type="password" id="admin-pass" placeholder="Mot de passe"></div>
-      <button class="btn btn-primary" style="width: 100%;" onclick="verifyAdminLogin()">Ouvrir l'administration</button>
-      <button class="btn btn-secondary" style="width: 100%; margin-top: 10px; border:none;" onclick="closeModal('login-modal')">Annuler</button>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="admin-dashboard-modal">
-    <div class="admin-box">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        <h3>🛠️ Console Pro DiegoTraiteur</h3>
-        <button class="sidebar-close" onclick="closeModal('admin-dashboard-modal')">✕</button>
-      </div>
-      <div class="admin-nav-tabs">
-        <button class="tab-btn active" id="tab-prod-btn" onclick="switchTab('products')">🍳 Ajouter Plat</button>
-        <button class="tab-btn" id="tab-stock-btn" onclick="switchTab('stock')">🗂️ Stocks Vitrine</button>
-        <button class="tab-btn" id="tab-orders-btn" onclick="switchTab('orders')">📬 Commandes & Messages</button>
-        <button class="tab-btn" id="tab-config-btn" onclick="switchTab('config')">📞 Éditer Infos Contact</button>
-      </div>
-
-      <div id="admin-products-section">
-        <form id="product-form" onsubmit="addProductCloud(event)">
-          <div class="form-group"><label>Nom du plat</label><input type="text" id="p-title" required></div>
-          <div class="form-group"><label>Prix unitaire (€)</label><input type="number" id="p-price" step="0.01" required></div>
-          <div class="form-group"><label>Lien de la photo internet</label><input type="text" id="p-img" placeholder="https://..."></div>
-          <div class="form-group"><label>Description des saveurs</label><textarea id="p-desc" required></textarea></div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">🚀 Mettre en ligne</button>
-        </form>
-      </div>
-
-      <div id="admin-stock-section" style="display:none;"><div id="stock-list-container"></div></div>
-      <div id="admin-orders-section" style="display: none;"><div id="orders-log-container"></div></div>
-
-      <div id="admin-config-section" style="display: none;">
-        <div class="form-group"><label>Téléphone affiché</label><input type="text" id="edit-phone"></div>
-        <div class="form-group"><label>Email affiché</label><input type="email" id="edit-email"></div>
-        <div class="form-group"><label>Adresse de l'Atelier</label><input type="text" id="edit-address"></div>
-        <div class="form-group"><label>Horaires d'ouverture</label><input type="text" id="edit-hours"></div>
-        <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="saveContactConfig()">💾 Publier les Coordonnées</button>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="btn btn-secondary" style="flex: 1;" onclick="closeModal('login-modal')">Annuler</button>
+        <button class="btn btn-primary" style="flex: 2;" onclick="verifyAdminLogin()">Ouvrir</button>
       </div>
     </div>
   </div>
 
   <script>
     const API_PRODUCTS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/products";
-    const API_ORDERS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/orders"; 
+    const API_ORDERS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/orders";
+    const API_TEXTS_URL = "https://6a1eabd8b79eec0d6cefd6ee.mockapi.io/site_texts";
 
     let products = [];
     let cloudOrders = [];
-    let cart = [];
-    let clientDeliveryInfo = null;
-    let paypalRendered = false;
-
-    let contactConfig = JSON.parse(localStorage.getItem('traiteur_contact_data')) || {
-      phone: "06 45 89 12 00",
-      email: "contact@diegotraiteur.com",
-      address: "Atelier DiegoTraiteur, 45 Avenue des Saveurs, 75008 Paris",
-      hours: "7j/7 — De 07:30 à 21:00"
+    
+    let siteTexts = {
+      id: "1",
+      heroTitle: "L'Art du Saumon & Haute Gastronomie",
+      heroDesc: "Artisan traiteur d'exception, sublimant l'art du saumon et des créations culinaires raffinées pour tous vos événements.",
+      storyTitle: "Qualité & Tradition",
+      storyBody1: "Bienvenue dans l'univers DIEGOTRAITEUR. Spécialisés dans les plats préparés haut de gamme et les pièces d'orfèvrerie autour du saumon, de la boucherie et de la charcuterie fine, nous mettons notre passion au service de vos tables.",
+      storyBody2: "Chaque pièce est sélectionnée rigoureusement, travaillée et dressée avec soin pour garantir une fraîcheur irréprochable et une explosion de saveurs en bouche."
     };
+
+    // Coordonnées stockées par défaut
+    let contactInfo = JSON.parse(localStorage.getItem('diegotraiteur_contact')) || {
+      phone: "06 12 34 56 78",
+      address: "Atelier DiegoTraiteur, 66000 Perpignan",
+      email: "diego.traiteur66@gmail.com",
+      hours: "Lundi au Samedi : 8h00 - 19h30\nDimanche : 8h00 - 13h00"
+    };
+
+    const fallbackLogo = "image_ebb786.jpg";
+    let currentAuth = JSON.parse(localStorage.getItem('diegotraiteur_auth')) || { user: "diego", pass: "traiteur2026" };
 
     document.addEventListener("DOMContentLoaded", () => {
       fetchDataFromCloud();
-      applyContactConfigUI();
+      fetchTextsFromCloud();
+      applyContactToUI();
     });
 
-    function switchSection(sectionId) {
-      document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-link-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`section-${sectionId}`).classList.add('active');
-      document.getElementById(`btn-nav-${sectionId}`).classList.add('active');
-      window.scrollTo(0,0);
+    function switchMainPage(pageId) {
+      document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+      document.querySelectorAll('.nav-link-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`page-${pageId}`).classList.add('active');
+      document.getElementById(`link-${pageId}`).classList.add('active');
     }
 
     async function fetchDataFromCloud() {
@@ -382,270 +418,235 @@
           fetch(API_ORDERS_URL).catch(() => null)
         ]);
         if(prodRes && prodRes.ok) { products = await prodRes.json(); products.reverse(); }
-        if(orderRes && orderRes.ok) { cloudOrders = await orderRes.json(); cloudOrders.reverse(); }
-        filterAndSortProducts();
-      } catch (error) {}
+        if(orderRes && orderRes.ok) { cloudOrders = await orderRes.json(); cloudOrders.reverse(); document.getElementById('orders-badge').innerText = cloudOrders.length; }
+        renderProductsGrid(products);
+      } catch (e) {}
     }
 
-    function openSecretAdmin() { 
-      document.getElementById('admin-user').value = "";
-      document.getElementById('admin-pass').value = "";
-      document.getElementById('login-modal').style.display = 'flex'; 
+    async function fetchTextsFromCloud() {
+      try {
+        const res = await fetch(`${API_TEXTS_URL}/1`);
+        if(res.ok) siteTexts = await res.json();
+        else await fetch(API_TEXTS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(siteTexts) });
+      } catch (e) {}
+      applyTextsToUI();
     }
-    
+
+    function applyTextsToUI() {
+      document.getElementById('view-hero-title').innerText = siteTexts.heroTitle;
+      document.getElementById('view-hero-desc').innerText = siteTexts.heroDesc;
+      document.getElementById('view-story-title').innerText = siteTexts.storyTitle;
+      document.getElementById('view-story-body-1').innerText = siteTexts.storyBody1;
+      document.getElementById('view-story-body-2').innerText = siteTexts.storyBody2;
+    }
+
+    function applyContactToUI() {
+      document.getElementById('view-ctx-phone').innerText = contactInfo.phone;
+      document.getElementById('view-ctx-phone').href = "tel:" + contactInfo.phone.replace(/\s+/g, '');
+      document.getElementById('view-ctx-address').innerText = contactInfo.address;
+      document.getElementById('view-ctx-email').innerText = contactInfo.email;
+      document.getElementById('view-ctx-email').href = "mailto:" + contactInfo.email;
+      document.getElementById('view-ctx-hours').innerText = contactInfo.hours;
+    }
+
+    function openSecretAdmin() { document.getElementById('login-modal').style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // ICI : CORRECTION DEFINITIVE DES IDENTIFIANTS
     function verifyAdminLogin() {
       const u = document.getElementById('admin-user').value.trim();
       const p = document.getElementById('admin-pass').value.trim();
       
-      if (u === "diego" && p === "traiteur2026") {
+      if(u === currentAuth.user && p === currentAuth.pass) {
         closeModal('login-modal');
-        document.getElementById('admin-dashboard-modal').style.display = 'flex';
-        
-        document.getElementById('edit-phone').value = contactConfig.phone;
-        document.getElementById('edit-email').value = contactConfig.email;
-        document.getElementById('edit-address').value = contactConfig.address;
-        document.getElementById('edit-hours').value = contactConfig.hours;
+        document.getElementById('client-view-wrapper').style.display = 'none';
+        document.getElementById('admin-fullscreen-view').style.display = 'block';
+        window.scrollTo(0,0);
+
+        document.getElementById('edit-hero-title').value = siteTexts.heroTitle;
+        document.getElementById('edit-hero-desc').value = siteTexts.heroDesc;
+        document.getElementById('edit-story-title').value = siteTexts.storyTitle;
+        document.getElementById('edit-story-body-1').value = siteTexts.storyBody1;
+        document.getElementById('edit-story-body-2').value = siteTexts.storyBody2;
+
+        // Pré-remplir la configuration contact
+        document.getElementById('edit-ctx-phone').value = contactInfo.phone;
+        document.getElementById('edit-ctx-address').value = contactInfo.address;
+        document.getElementById('edit-ctx-email').value = contactInfo.email;
+        document.getElementById('edit-ctx-hours').value = contactInfo.hours;
+
+        document.getElementById('new-admin-user').value = currentAuth.user;
+        document.getElementById('new-admin-pass').value = currentAuth.pass;
 
         renderStockControl();
         renderOrdersList();
-      } else { 
-        alert("Identifiants incorrects."); 
-      }
+      } else { alert("Accès refusé."); }
     }
 
-    function switchTab(tab) {
-      document.getElementById('admin-products-section').style.display = tab === 'products' ? 'block' : 'none';
-      document.getElementById('admin-stock-section').style.display = tab === 'stock' ? 'block' : 'none';
-      document.getElementById('admin-orders-section').style.display = tab === 'orders' ? 'block' : 'none';
-      document.getElementById('admin-config-section').style.display = tab === 'config' ? 'block' : 'none';
-      
-      document.getElementById('tab-prod-btn').classList.toggle('active', tab === 'products');
-      document.getElementById('tab-stock-btn').classList.toggle('active', tab === 'stock');
-      document.getElementById('tab-orders-btn').classList.toggle('active', tab === 'orders');
-      document.getElementById('tab-config-btn').classList.toggle('active', tab === 'config');
-      
-      if(tab === 'stock') renderStockControl();
-      if(tab === 'orders') renderOrdersList();
+    function saveContactInfo() {
+      contactInfo.phone = document.getElementById('edit-ctx-phone').value.trim();
+      contactInfo.address = document.getElementById('edit-ctx-address').value.trim();
+      contactInfo.email = document.getElementById('edit-ctx-email').value.trim();
+      contactInfo.hours = document.getElementById('edit-ctx-hours').value.trim();
+
+      localStorage.setItem('diegotraiteur_contact', JSON.stringify(contactInfo));
+      applyContactToUI();
+      alert("✅ Fiche contact mise à jour avec succès !");
+      exitAdminView();
     }
 
-    function saveContactConfig() {
-      contactConfig.phone = document.getElementById('edit-phone').value.trim();
-      contactConfig.email = document.getElementById('edit-email').value.trim();
-      contactConfig.address = document.getElementById('edit-address').value.trim();
-      contactConfig.hours = document.getElementById('edit-hours').value.trim();
-      
-      localStorage.setItem('traiteur_contact_data', JSON.stringify(contactConfig));
-      applyContactConfigUI();
-      alert("Coordonnées mises à jour sur le site !");
-      closeModal('admin-dashboard-modal');
-    }
+    async function submitDirectContact() {
+      const name = document.getElementById('c-direct-name').value.trim();
+      const phone = document.getElementById('c-direct-phone').value.trim();
+      const msg = document.getElementById('c-direct-msg').value.trim();
 
-    function applyContactConfigUI() {
-      document.getElementById('info-phone').innerText = contactConfig.phone;
-      document.getElementById('info-phone').href = "tel:" + contactConfig.phone.replace(/\s+/g, '');
-      document.getElementById('info-email').innerText = contactConfig.email;
-      document.getElementById('info-email').href = "mailto:" + contactConfig.email;
-      document.getElementById('info-address').innerText = contactConfig.address;
-      document.getElementById('info-hours').innerText = contactConfig.hours;
-    }
-
-    async function submitDirectMessage(e) {
-      e.preventDefault();
-      const name = document.getElementById('m-name').value.trim();
-      const phone = document.getElementById('m-phone').value.trim();
-      const body = document.getElementById('m-body').value.trim();
-
-      const payload = {
-        client: name,
-        tel: phone,
-        adresse: "MESSAGE DIRECT DEPUIS ONGLET CONTACT",
-        total: "Demande de contact / Devis",
-        items: body,
-        date: new Date().toLocaleString('fr-FR')
-      };
+      if(!name || !phone || !msg) { alert("Veuillez remplir tous les champs du formulaire."); return; }
 
       try {
-        await fetch(API_ORDERS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-        alert("Votre message a bien été transmis. Nous vous recontactons rapidement !");
-        document.getElementById('m-name').value = ""; document.getElementById('m-phone').value = ""; document.getElementById('m-body').value = "";
-        fetchDataFromCloud();
-      } catch(e) {}
+        const res = await fetch(API_ORDERS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client: name, tel: phone, adresse: msg, total: "Message Direct", items: "Prise de contact générale", date: new Date().toLocaleString('fr-FR') })
+        });
+        if(res.ok) {
+          document.getElementById('c-direct-name').value = ""; document.getElementById('c-direct-phone').value = ""; document.getElementById('c-direct-msg').value = "";
+          document.getElementById('success-modal').style.display = 'flex';
+          fetchDataFromCloud();
+        }
+      } catch (e) {}
     }
 
-    function filterAndSortProducts() {
-      const searchStr = document.getElementById('search-input').value.toLowerCase().trim();
-      const sortType = document.getElementById('sort-select').value;
-      let result = [...products];
-      if(searchStr) result = result.filter(p => p.title.toLowerCase().includes(searchStr) || p.desc.toLowerCase().includes(searchStr));
-      if(sortType === "price-asc") result.sort((a,b) => parseFloat(a.price) - parseFloat(b.price));
-      if(sortType === "price-desc") result.sort((a,b) => parseFloat(b.price) - parseFloat(a.price));
-      renderProductsGrid(result);
+    function changeAdminCredentials() {
+      const newUser = document.getElementById('new-admin-user').value.trim();
+      const newPass = document.getElementById('new-admin-pass').value.trim();
+      if(!newUser || !newPass) { alert("Champs invalides."); return; }
+      currentAuth.user = newUser; currentAuth.pass = newPass;
+      localStorage.setItem('diegotraiteur_auth', JSON.stringify(currentAuth));
+      alert("🔒 Accès modifiés !");
+      exitAdminView();
+    }
+
+    function exitAdminView() {
+      document.getElementById('admin-fullscreen-view').style.display = 'none';
+      document.getElementById('client-view-wrapper').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+
+    function switchAdminPanel(panel) {
+      document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById(`panel-${panel}`).classList.add('active');
+      document.getElementById(`pan-${panel}-btn`).classList.add('active');
+    }
+
+    function filterProducts() {
+      const s = document.getElementById('search-input').value.toLowerCase().trim();
+      let res = [...products];
+      if(s) res = res.filter(p => p.title.toLowerCase().includes(s) || p.desc.toLowerCase().includes(s));
+      renderProductsGrid(res);
     }
 
     function renderProductsGrid(arr) {
       const container = document.getElementById('products-container');
-      if(arr.length === 0) { container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">Aucune pièce culinaire disponible.</div>`; return; }
+      if(!arr || arr.length === 0) { container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:50px; color:var(--text-muted);">Aucune création trouvée.</div>`; return; }
       container.innerHTML = arr.map(p => `
         <div class="product-card">
-          <div class="prod-img-wrapper">
-            <img src="${p.img || 'image_ebb786.jpg'}" class="prod-img" onerror="this.src='image_ebb786.jpg'"/>
-          </div>
+          <div class="prod-img-wrapper"><img src="${p.img || fallbackLogo}" class="prod-img" onerror="this.src='${fallbackLogo}'"/></div>
           <div class="prod-content">
             <h3 class="prod-title">${escapeHtml(p.title)}</h3>
             <p class="prod-desc">${escapeHtml(p.desc)}</p>
             <div class="prod-footer">
-              <span class="prod-price">${parseFloat(p.price).toFixed(2)} €</span>
-              <button class="btn btn-primary" style="padding:10px 18px; font-size:0.85rem;" onclick="addToCart('${p.id}')">Ajouter à ma table</button>
+              <span class="prod-badge">Artisanat Français</span>
+              <button class="btn btn-primary" style="padding:10px 20px; font-size:0.85rem;" onclick="openRequestModal('${p.id}', '${escapeHtml(p.title)}')">Se renseigner</button>
             </div>
           </div>
         </div>
       `).join('');
     }
 
+    function openRequestModal(id, title) {
+      document.getElementById('req-product-id').value = id;
+      document.getElementById('req-product-title').innerText = title;
+      document.getElementById('request-modal').style.display = 'flex';
+    }
+
+    async function submitClientRequest() {
+      const name = document.getElementById('r-name').value.trim();
+      const phone = document.getElementById('r-phone').value.trim();
+      const message = document.getElementById('r-message').value.trim();
+      const itemTitle = document.getElementById('req-product-title').innerText;
+
+      if(!name || !phone) { alert("Veuillez remplir vos coordonnées."); return; }
+      try {
+        const res = await fetch(API_ORDERS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ client: name, tel: phone, adresse: message || "Aucune note.", total: "Fiche Traiteur", items: itemTitle, date: new Date().toLocaleString('fr-FR') })
+        });
+        if(res.ok) {
+          closeModal('request-modal');
+          document.getElementById('r-name').value = ""; document.getElementById('r-phone').value = ""; document.getElementById('r-message').value = "";
+          document.getElementById('success-modal').style.display = 'flex';
+          fetchDataFromCloud();
+        }
+      } catch (e) {}
+    }
+
+    async function saveSiteTextsCloud() {
+      const payload = {
+        heroTitle: document.getElementById('edit-hero-title').value.trim(),
+        heroDesc: document.getElementById('edit-hero-desc').value.trim(),
+        storyTitle: document.getElementById('edit-story-title').value.trim(),
+        storyBody1: document.getElementById('edit-story-body-1').value.trim(),
+        storyBody2: document.getElementById('edit-story-body-2').value.trim()
+      };
+      try {
+        const res = await fetch(`${API_TEXTS_URL}/1`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if(res.ok) { siteTexts = await res.json(); applyTextsToUI(); alert("Modification enregistrée !"); exitAdminView(); }
+      } catch (e) {}
+    }
+
     async function addProductCloud(e) {
       e.preventDefault();
       const title = document.getElementById('p-title').value.trim();
-      const price = parseFloat(document.getElementById('p-price').value);
       const img = document.getElementById('p-img').value.trim();
       const desc = document.getElementById('p-desc').value.trim();
       try {
-        await fetch(API_PRODUCTS_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, price, cat: "Traiteur", img, desc })
-        });
-        document.getElementById('product-form').reset(); 
-        closeModal('admin-dashboard-modal'); 
-        await fetchDataFromCloud();
-      } catch (error) {}
+        const res = await fetch(API_PRODUCTS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, price: 0, cat: "Traiteur", img, desc }) });
+        if(res.ok) { document.getElementById('product-form').reset(); await fetchDataFromCloud(); switchAdminPanel('stock'); }
+      } catch (e) {}
     }
 
     async function deleteProductCloud(id) {
-      if(!confirm("Retirer ce plat de la carte ?")) return;
+      if(!confirm("Retirer ce plat ?")) return;
       try {
         const res = await fetch(`${API_PRODUCTS_URL}/${id}`, { method: 'DELETE' });
         if(res.ok) { await fetchDataFromCloud(); renderStockControl(); }
-      } catch (error) {}
+      } catch (e) {}
     }
 
     function renderStockControl() {
       const container = document.getElementById('stock-list-container');
+      if(!products || products.length === 0) { container.innerHTML = `<p>Aucun produit.</p>`; return; }
       container.innerHTML = products.map(p => `
         <div class="admin-list-item">
-          <div><strong style="color:white;">${escapeHtml(p.title)}</strong> — <span style="color:var(--gold); font-weight:700;">${parseFloat(p.price).toFixed(2)} €</span></div>
-          <button class="btn btn-danger" style="padding:8px 15px; font-size:0.85rem;" onclick="deleteProductCloud('${p.id}')">Retirer</button>
+          <div><strong>${escapeHtml(p.title)}</strong></div>
+          <button class="btn btn-danger" style="padding:8px 16px; font-size:0.85rem;" onclick="deleteProductCloud('${p.id}')">Retirer</button>
         </div>
       `).join('');
-    }
-
-    function toggleCart(open) { document.getElementById('cart-sidebar').classList.toggle('open', open); }
-    function addToCart(id) { const p = products.find(prod => prod.id == id); if(p) { cart.push(p); updateCartUI(); toggleCart(true); } }
-    function removeFromCart(index) { cart.splice(index, 1); paypalRendered = false; updateCartUI(); }
-
-    function updateCartUI() {
-      document.getElementById('cart-count').innerText = cart.length;
-      const container = document.getElementById('cart-items-container');
-      if(cart.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding-top:40px;">Votre panier est vide.</p>`;
-        document.getElementById('cart-total-price').innerText = "0.00 €";
-        return;
-      }
-      container.innerHTML = cart.map((item, index) => `
-        <div class="cart-item">
-          <div class="cart-item-info">
-            <div style="font-weight:700; color:white;">${escapeHtml(item.title)}</div>
-            <div style="color:var(--gold); font-weight:700; margin-top:2px;">${parseFloat(item.price).toFixed(2)} €</div>
-          </div>
-          <button class="cart-item-del" onclick="removeFromCart(${index})">Retirer</button>
-        </div>
-      `).join('');
-      const subtotal = cart.reduce((s, i) => s + i.price, 0);
-      document.getElementById('cart-total-price').innerText = `${subtotal.toFixed(2)} €`;
-    }
-
-    function openCheckoutModal() {
-      if(cart.length === 0) return;
-      toggleCart(false);
-      const subtotal = cart.reduce((s, i) => s + i.price, 0);
-      const totalWithDelivery = subtotal + 4.00;
-      document.getElementById('summary-subtotal').innerText = `${subtotal.toFixed(2)} €`;
-      document.getElementById('summary-total').innerText = `${totalWithDelivery.toFixed(2)} €`;
-      document.getElementById('checkout-modal').style.display = 'flex';
-    }
-
-    function proceedToPaymentStage() {
-      const name = document.getElementById('c-name').value.trim();
-      const phone = document.getElementById('c-phone').value.trim();
-      const address = document.getElementById('c-address').value.trim();
-      if(!name || !phone || !address) { alert("⚠️ Données incomplètes."); return; }
-
-      clientDeliveryInfo = { name, phone, address };
-      const subtotal = cart.reduce((s, i) => s + i.price, 0);
-      const finalGrandTotal = subtotal + 4.00;
-
-      closeModal('checkout-modal');
-      document.getElementById('payment-grand-total').innerText = `${finalGrandTotal.toFixed(2)} €`;
-      document.getElementById('payment-modal').style.display = 'flex';
-      initPayPalButton(finalGrandTotal);
-    }
-
-    function backToAddressStage() {
-      closeModal('payment-modal');
-      document.getElementById('checkout-modal').style.display = 'flex';
-    }
-
-    function initPayPalButton(grandTotalValue) {
-      if (paypalRendered) return;
-      document.getElementById('paypal-button-container').innerHTML = "";
-      paypal.Buttons({
-        createOrder: function(data, actions) {
-          return actions.order.create({
-            purchase_units: [{
-              amount: { currency_code: 'EUR', value: grandTotalValue.toFixed(2) },
-              description: "Commande Gastronomique"
-            }]
-          });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(async function(details) {
-            const orderPayload = {
-              client: clientDeliveryInfo.name,
-              tel: clientDeliveryInfo.phone,
-              adresse: clientDeliveryInfo.address,
-              total: `${grandTotalValue.toFixed(2)} €`,
-              items: cart.map(i => i.title).join(', '),
-              date: new Date().toLocaleString('fr-FR'),
-              paypalOrderId: details.id
-            };
-            try {
-              await fetch(API_ORDERS_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
-            } catch(e) {}
-            closeModal('payment-modal');
-            cart = []; paypalRendered = false; updateCartUI();
-            document.getElementById('success-modal').style.display = 'flex';
-            fetchDataFromCloud();
-          });
-        },
-        onError: function(err) { alert("⚠️ Échec PayPal."); }
-      }).render('#paypal-button-container');
-      paypalRendered = true;
     }
 
     function renderOrdersList() {
       const container = document.getElementById('orders-log-container');
-      if(cloudOrders.length === 0) { container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">Aucun historique.</p>`; return; }
+      if(!cloudOrders || cloudOrders.length === 0) { container.innerHTML = `<p style="text-align:center; padding:20px;">Aucun contact reçu.</p>`; return; }
       container.innerHTML = cloudOrders.map(o => `
         <div class="order-row">
-          <div class="order-header"><span>📬 Fiche</span><span style="color:var(--gold);">${o.total}</span></div>
-          <div style="font-size:0.9rem; color:#a69995; line-height:1.5;">
-            <p><strong>Client :</strong> ${escapeHtml(o.client)}</p>
-            <p><strong>Mobile :</strong> <a href="tel:${o.tel}" style="color: var(--accent); text-decoration:none;">${escapeHtml(o.tel)}</a></p>
-            <p><strong>Note :</strong> ${escapeHtml(o.adresse)}</p>
-            <p style="margin-top:5px; border-top:1px dashed rgba(255,255,255,0.05); padding-top:5px;"><strong>Détail :</strong> <span style="color:white;">${escapeHtml(o.items)}</span></p>
+          <div class="order-header">
+            <span>👤 ${escapeHtml(o.client)}</span>
+            <span style="color:var(--accent); font-size:0.9rem;">${o.date || ''}</span>
           </div>
+          <p><strong>📞 Mobile :</strong> <a href="tel:${o.tel}" style="color:var(--accent); text-decoration:none; font-weight:700;">${escapeHtml(o.tel)}</a></p>
+          <p style="margin:5px 0;"><strong>🍳 Type :</strong> ${escapeHtml(o.total)} — ${escapeHtml(o.items)}</p>
+          <p style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); color:#666;"><strong>Contenu / Message :</strong><br>${escapeHtml(o.adresse)}</p>
         </div>
       `).join('');
     }
